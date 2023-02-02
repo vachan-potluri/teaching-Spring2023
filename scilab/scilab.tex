@@ -2,22 +2,73 @@
     10pt,
     xcolor={dvipsnames},
 ]{beamer}
-\usepackage{tcolorbox}
+\usepackage{lstautogobble}
+\usepackage[listings,skins]{tcolorbox}
+\usetheme[footline-framenumber]{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
 
 
 
-\usetheme{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
-
-
-
-\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}} % for email ids
-\newtcolorbox{shoutbox}{%
-    code={\usebeamercolor{block title}},
-    colback=bg,
-    colframe=bg!50!black,
-    coltext=fg,
-    fontupper=\Large\centering,
+\lstdefinestyle{ScilabStyle}
+{
+    % scilab formatting style
+    language=Scilab,
+    backgroundcolor=\color{gray!10},
+    basicstyle=\linespread{1.25}\ttfamily,
+    commentstyle=\color{green!70!black},
+    keywordstyle=\bfseries\color{blue},
+    numberstyle=\color{gray}\sffamily\footnotesize,
+    stringstyle=\color{red},
+    basewidth=0.6em,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=t,
+    frame=tb,
+    keepspaces=true,
+    numbers=none,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    morekeywords=[2]{\%t,\%f,\%pi,\%e,\%i,\%inf,\%nan,\%eps},
+    keywordstyle=[2]\color{magenta},
+    morecomment=[s][\bfseries\color{orange!70}]{/*}{*/},
+    %morecomment=[l][\itshape\color{blue!30!green}]{//-},
+    autogobble=true,
+    xleftmargin=1.5em,
+    xrightmargin=1.5em,
 }
+\lstset{style=ScilabStyle}
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}} % for email ids
+\newcommand{\inlinecode}[1]{\texttt{#1}} % inline code
+\newcommand{\keyword}[1]{\keywordbox{#1}}
+\newcommand{\matlab}{\texttt{MATLAB}}
+\newcommand{\scilab}{\texttt{Scilab}}
+\newtcbox{\keywordbox}{%
+    on line,
+    colback=gray!10,
+    boxsep=0pt,
+    size=fbox,
+    arc=0pt,
+    bottomrule=0.5pt,
+    toprule=0pt,
+    leftrule=0pt,
+    rightrule=0pt,
+} % for printing keywords, used in \keyword
+\newtcbox{\key}{%
+    enhanced,
+    on line,
+    colback=gray!25,
+    boxsep=0pt,
+    size=fbox,
+    bottomrule=0pt,
+    toprule=0pt,
+    leftrule=0pt,
+    rightrule=0pt,
+    fontupper=\ttfamily\small,
+    drop fuzzy shadow,
+}
+
 
 
 
@@ -31,15 +82,23 @@
 
 \begin{document}
 
-\begin{frame}
-    \maketitle
-\end{frame}
+\setlength\leftmargini{1em} % left margin, first level itemize
+\setlength\leftmarginii{\leftmargini} % left margin, 2nd level
+\setlength\leftmarginiii{\leftmarginii} % left margin, 3rd level
+
+{
+    \setbeamertemplate{headline}{}
+    \setbeamertemplate{footline}{}
+    \begin{frame}
+        \titlepage
+    \end{frame}
+}
 
 \begin{frame}{Introduction}
-    \begin{block}{What is it?}
-        A free alternative to MATLAB
+    \begin{block}{What is \scilab?}
+        A free alternative to \matlab
     \end{block}
-    \begin{block}{What can it do?}
+    \begin{block}<visible@2->{What can it do?}
         \begin{enumerate}
             \item Advanced calculator
             \item Programming
@@ -48,10 +107,106 @@
     \end{block}
 \end{frame}
 
-\begin{frame}
-    \begin{shoutbox}
-        GUI
-    \end{shoutbox}
+\begin{frame}[fragile]{\scilab{} Console}{As a calculator}
+    \begin{itemize}
+        \item The window with \inlinecode{-->} prompt is the console
+        \item Try out these and see if they give expected results
+    \end{itemize}
+    \begin{lstlisting}[numbers=left]
+        2+3-4
+        4^2
+        4**4
+        6/4
+        2+(2^2-(1/2))
+        1e-3 + 1d-2
+    \end{lstlisting}
+\onslide<2->
+    See what happens when you add a semicolon
+    \begin{lstlisting}
+        6/4;
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{\scilab{} Console}{Variables}
+    All calculations are stored by default in \inlinecode{ans}
+    \begin{lstlisting}
+        6/4;
+        ans
+    \end{lstlisting}
+\onslide<2->
+    You can specify a variable to store the value instead \ldots
+    \begin{lstlisting}
+        pi_approx = 22/7;
+    \end{lstlisting}
+    and see its value later
+    \begin{lstlisting}
+        pi_approx
+        disp(pi_approx)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Other \scilab{} windows}
+    \begin{itemize}
+        \item \keyword{Variable Browser}
+        \begin{itemize}
+            \item Only lists user-defined variables
+            \item To list all variables:
+            \begin{lstlisting}
+                whos
+            \end{lstlisting}
+\onslide<2->
+            \item You can delete all or specific user-defined variables
+            \begin{lstlisting}
+                pi_approx = 22/7;
+                disp(pi_approx)
+                clear pi_approx
+                disp(pi_approx)
+            \end{lstlisting}
+        \end{itemize}
+\onslide<3->
+        \item \keyword{Command History}
+        \begin{itemize}
+            \item Execute an old command by double clicking
+            \item Can also navigate using $\uparrow$ and $\downarrow$ keys
+            \item Clear screen using \inlinecode{clc}
+        \end{itemize}
+\onslide<4->
+        \item \keyword{File Browser}
+        \begin{itemize}
+            \item Useful when working with multiple files
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{More on variables}
+    Some useful pre-defined variables
+    \begin{lstlisting}[numbers=left]
+        %pi
+        %e
+        %i
+        %t
+        %f
+        %inf
+        %nan
+        %eps
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Pre-defined functions}
+    See if the outputs of these lines are as expected
+    \begin{lstlisting}[numbers=left]
+        abs(-2)
+        min(3,4,5)
+        max(-2,-3,-4)
+        sin(%pi/2)
+        cos(%pi)
+        tan(%pi/4)
+        asin(1)/(%pi/2)
+        exp(2)/%e^2
+        log10(100)
+        log(%e)
+    \end{lstlisting}
+    Auto-completion: hit \key{TAB}
 \end{frame}
 
 \end{document}
