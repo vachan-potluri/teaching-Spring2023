@@ -1,0 +1,57 @@
+\documentclass[%
+    10pt,
+    xcolor={dvipsnames},
+]{beamer}
+\usepackage{tcolorbox}
+
+
+
+\usetheme{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
+
+
+
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}} % for email ids
+\newtcolorbox{shoutbox}{%
+    code={\usebeamercolor{block title}},
+    colback=bg,
+    colframe=bg!50!black,
+    coltext=fg,
+    fontupper=\Large\centering,
+}
+
+
+
+\title{Scilab}
+\author[Vachan Potluri]{%
+    Vachan Potluri\\
+    \email{vachanpotluri@iitb.ac.in}
+}
+
+
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}{Introduction}
+    \begin{block}{What is it?}
+        A free alternative to MATLAB
+    \end{block}
+    \begin{block}{What can it do?}
+        \begin{enumerate}
+            \item Advanced calculator
+            \item Programming
+            \item Plotting, visualisation
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \begin{shoutbox}
+        GUI
+    \end{shoutbox}
+\end{frame}
+
+\end{document}
