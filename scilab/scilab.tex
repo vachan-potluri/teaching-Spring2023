@@ -1,9 +1,15 @@
 \documentclass[%
     10pt,
     xcolor={dvipsnames},
+    handout,
 ]{beamer}
+\usepackage{amsmath}
+\usepackage[%
+    isbn=false,
+]{biblatex}
 \usepackage{lstautogobble}
-\usepackage[listings,skins]{tcolorbox}
+\usepackage[listings,skins,theorems]{tcolorbox}
+\usepackage{siunitx}
 \usetheme[miniframes,framenumber-footline]{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
 
 
@@ -70,6 +76,22 @@
     fontupper=\ttfamily,
     drop fuzzy shadow,
 } % for printing keyboard keys
+\newtcolorbox[auto counter]{exercise}{%
+    code={
+        \usebeamercolor{block title}
+        \colorlet{titlebg}{bg}
+        \colorlet{titlefg}{fg}
+        \usebeamercolor{block body}
+        \colorlet{bodybg}{bg}
+        \colorlet{bodyfg}{fg}
+    },
+    colbacktitle=titlebg,
+    coltitle=titlefg,
+    colback=bodybg,
+    coltext=bodyfg,
+    size=fbox,
+    title={Exercise~\thetcbcounter},
+}% boxed env for exercises
 
 
 
@@ -79,6 +101,7 @@
     Vachan Potluri\\
     \email{vachanpotluri@iitb.ac.in}
 }
+\addbibresource{references.bib}
 
 
 
@@ -111,7 +134,7 @@
 
 \section{\scilab{} console}
 \subsection{Advanced calculator}
-\begin{frame}[fragile]{As a calculator}
+\begin{frame}[fragile]{Simple calculations}
     Try out these and see if they give expected results
     \begin{lstlisting}[numbers=left]
         2+3-4
@@ -135,48 +158,15 @@
         ans
     \end{lstlisting}
 \onslide<2->
-    You can specify a variable to store the value instead \ldots
+    You can specify a variable to store the value instead
     \begin{lstlisting}
         pi_approx = 22/7;
     \end{lstlisting}
-    and see its value later
+    And see its value later
     \begin{lstlisting}
         pi_approx
         disp(pi_approx)
     \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Other \scilab{} windows}
-    \begin{itemize}
-        \item \keyword{Variable Browser}
-        \begin{itemize}
-            \item Only lists user-defined variables
-            \item To list all variables:
-            \begin{lstlisting}
-                whos
-            \end{lstlisting}
-\onslide<2->
-            \item You can delete all or specific user-defined variables
-            \begin{lstlisting}
-                pi_approx = 22/7;
-                disp(pi_approx)
-                clear pi_approx
-                disp(pi_approx)
-            \end{lstlisting}
-        \end{itemize}
-\onslide<3->
-        \item \keyword{Command History}
-        \begin{itemize}
-            \item Execute an old command by double clicking
-            \item Can also navigate using $\uparrow$ and $\downarrow$ keys
-            \item Clear screen using \inlinecode{clc}
-        \end{itemize}
-\onslide<4->
-        \item \keyword{File Browser}
-        \begin{itemize}
-            \item Useful when working with multiple files
-        \end{itemize}
-    \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{More on variables}
@@ -210,9 +200,42 @@
     Auto-completion: hit \key{TAB}
 \end{frame}
 
+\begin{frame}[fragile]{Other \scilab{} windows}
+\begin{itemize}
+    \item \keyword{Variable Browser}
+    \begin{itemize}
+        \item Only lists user-defined variables
+        \item To list all variables:
+        \begin{lstlisting}
+            whos
+        \end{lstlisting}
+        \onslide<2->
+        \item You can delete all or specific user-defined variables
+        \begin{lstlisting}
+            pi_approx = 22/7;
+            disp(pi_approx)
+            clear pi_approx
+            disp(pi_approx)
+        \end{lstlisting}
+    \end{itemize}
+    \onslide<3->
+    \item \keyword{Command History}
+    \begin{itemize}
+        \item Execute an old command by double clicking
+        \item Can also navigate using $\uparrow$ and $\downarrow$ keys
+        \item Clear screen using \inlinecode{clc}
+    \end{itemize}
+    \onslide<4->
+    \item \keyword{File Browser}
+    \begin{itemize}
+        \item Useful when working with multiple files
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 \subsection{Arrays and matrices}
-\begin{frame}[fragile]{Manual matrix creation}
-    Wrap inside \inlinecode{[]}, use \inlinecode{,} and \inlinecode{;} to fill row and columns
+\begin{frame}[fragile]{Basic matrix creation}
+    Wrap inside \inlinecode{[]}, use \inlinecode{,} and \inlinecode{;} to fill rows and columns
     \begin{lstlisting}
         x = [1,2,3]
         y = [4;5;6;7]
@@ -254,7 +277,7 @@
         M = eye(3,3)
     \end{lstlisting}
 \onslide<3->
-    Can you make sense of this output?
+    Can you make sense of this result?
     \begin{lstlisting}
         M = [[zeros(1,2);ones(1,2);eye(2,2)],ones(4,1)]
     \end{lstlisting}
@@ -285,9 +308,9 @@
             \begin{lstlisting}
                 A.+B
                 A.*B
-                A.^2
                 A.^B
                 A./B
+                A.^2
             \end{lstlisting}
         \end{column}
     \end{columns}
@@ -304,6 +327,7 @@
     \begin{lstlisting}
         length(A)
         size(A)
+        sum(A)
         det(A)
         inv(A)
         trace(A)
@@ -357,5 +381,92 @@
         \end{column}
     \end{columns}
 \end{frame}
+
+\subsection{Miscellaneous}
+\begin{frame}[fragile]{Strings}
+    Wrap in \inlinecode{""} or \inlinecode{''}
+    \begin{lstlisting}
+        fname = "Vachan";
+        lname = 'Potluri';
+        fname + lname
+    \end{lstlisting}
+\onslide<2->
+    Function \inlinecode{string} converts variables to strings
+    \begin{lstlisting}
+        A = eye(2,2)
+        string(A)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Saving and loading data}
+    \scilab{} has a working directory
+    \begin{lstlisting}
+        pwd
+    \end{lstlisting}
+    Working directory can be changed from File Browser\\[0.5em]
+\onslide<2->
+    Function \inlinecode{save} saves user-defined variables to a file in working directory
+    \begin{lstlisting}
+        x = 1.5;
+        A = [1,2;3,4]
+        save("data.dat")
+    \end{lstlisting}
+\onslide<3->
+    These variables can be loaded for use later
+    \begin{lstlisting}
+        listvarinfile("data.dat")
+        load("data.dat")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Accessing help}
+    \scilab's built-in help functionality is very useful
+    \begin{lstlisting}
+        help
+        help save
+    \end{lstlisting}
+\end{frame}
+
+{
+% modify ',' to allow math mode line break at ','
+% https://tex.stackexchange.com/a/67540/133968
+\def\OldComma{,}
+\catcode`\,=13
+\def,{%
+    \ifmmode%
+    \OldComma\discretionary{}{}{}%
+    \else%
+    \OldComma%
+    \fi%
+}%
+\sisetup{list-separator={,~}}
+\begin{frame}{Exercises\footfullcite{amos2017}}
+    \begin{columns}
+        \begin{column}{0.49\linewidth}
+            \begin{exercise}
+                The pressure drop $\Delta p$ required for a flow rate $Q$ in a pipe of diameter $D$ is
+                \begin{equation*}
+                    \Delta p = 4.52 \frac{Q^{1.85}}{C^{1.7} D^{4.87}}
+                \end{equation*}
+                Find $\Delta p$ for these combinations of flow rates and diameters:
+                \begin{itemize}
+                    \item $Q=\numlist{50;100;200;400;1000}$
+                    \item $D=\numlist{0.5;1;1;2;4}$
+                \end{itemize}
+            \end{exercise}
+        \end{column}
+        \begin{column}{0.49\linewidth}
+            \begin{exercise}
+                A magic square is a matrix in which all rows, columns and diagonals sum to same number.
+                \begin{enumerate}
+                    \item Generate a magic square of size 10
+                    \item Verify its properties
+                \end{enumerate}
+                \alert{\small Hint: search \scilab{} help for the function \inlinecode{testmatrix}}
+            \end{exercise}
+        \end{column}
+    \end{columns}
+\end{frame}
+}
 
 \end{document}
