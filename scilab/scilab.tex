@@ -1,21 +1,31 @@
 \documentclass[%
     10pt,
     xcolor={dvipsnames},
-    handout,
+    % handout,
 ]{beamer}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[%
     isbn=false,
 ]{biblatex}
 \usepackage{lstautogobble}
-\usepackage[listings,skins,theorems]{tcolorbox}
+\usepackage[listings,skins,theorems,xparse]{tcolorbox}
 \usepackage{siunitx}
 \usetheme[miniframes,framenumber-footline]{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
 
 
 
-\lstdefinestyle{ScilabStyle}
-{
+\DeclareTotalTCBox{\inlinecode}{m}{%
+    verbatim,
+    size=tight,
+    boxsep=2pt,
+    arc=0pt,
+    bottomrule=0pt,
+    toprule=0pt,
+    leftrule=0pt,
+    rightrule=0pt,
+}{\lstinline|#1|} % for printing inline code
+\lstdefinestyle{ScilabStyle}{%
     % scilab formatting style
     language=Scilab,
     backgroundcolor=\color{gray!10},
@@ -27,6 +37,7 @@
     basewidth=0.6em,
     breakatwhitespace=false,
     breaklines=true,
+    postbreak=\hbox{$\hookrightarrow$},
     captionpos=t,
     frame=l,
     keepspaces=true,
@@ -46,24 +57,12 @@
 }
 \lstset{style=ScilabStyle}
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}} % for email ids
-\newcommand{\inlinecode}[1]{\inlinecodebox{#1}} % inline code
+\newcommand{\hint}[1]{{\small\alert{Hint: #1}}}
 \newcommand{\keyword}[1]{#1}
 \newcommand{\matlab}{\texttt{MATLAB}}
 \newcommand{\scilab}{\texttt{Scilab}}
-\newtcbox{\inlinecodebox}{%
-    code={\usebeamercolor{palette primary}},
-    on line,
-    colback=bg,
-    coltext=fg,
-    size=tight,
-    boxsep=2pt,
-    arc=0pt,
-    fontupper=\ttfamily,
-    bottomrule=0pt,
-    toprule=0pt,
-    leftrule=0pt,
-    rightrule=0pt,
-} % for printing inline code, used in \inlinecode
+\newcommand{\scinotes}{\texttt{SciNotes}}
+\newcommand{\setitemsep}[1]{\setlength\itemsep{#1}}
 \newtcbox{\key}{%
     enhanced,
     on line,
@@ -235,7 +234,7 @@
 
 \subsection{Arrays and matrices}
 \begin{frame}[fragile]{Basic matrix creation}
-    Wrap inside \inlinecode{[]}, use \inlinecode{,} and \inlinecode{;} to fill rows and columns
+    Wrap inside \inlinecode{[]}, use \inlinecode{,} and \inlinecode{;} to separate columns and rows
     \begin{lstlisting}
         x = [1,2,3]
         y = [4;5;6;7]
@@ -312,6 +311,7 @@
                 A./B
                 A.^2
             \end{lstlisting}
+            How is \inlinecode{A^2} different from \inlinecode{A.^2}?
         \end{column}
     \end{columns}
 \end{frame}
@@ -403,7 +403,7 @@
     \begin{lstlisting}
         pwd
     \end{lstlisting}
-    Working directory can be changed from File Browser\\[0.5em]
+    Working directory can be changed from File Browser (and also using \inlinecode{cd} or \inlinecode{chdir})\\[0.5em]
 \onslide<2->
     Function \inlinecode{save} saves user-defined variables to a file in working directory
     \begin{lstlisting}
@@ -456,17 +456,104 @@
             \end{exercise}
         \end{column}
         \begin{column}{0.49\linewidth}
+\onslide<2->
             \begin{exercise}
                 A magic square is a matrix in which all rows, columns and diagonals sum to same number.
                 \begin{enumerate}
                     \item Generate a magic square of size 10
                     \item Verify its properties
                 \end{enumerate}
-                \alert{\small Hint: search \scilab{} help for the function \inlinecode{testmatrix}}
+                \hint{search \scilab{} help for the function \inlinecode{testmatrix}}
             \end{exercise}
         \end{column}
     \end{columns}
 \end{frame}
 }
+
+\section{Programming}
+\begin{frame}{\scinotes: built-in editor}
+    \begin{itemize}
+        \setitemsep{1em}
+        \item Console is only useful for short calculations
+        \item A single file containing all commands is useful for large calculations
+        \item<2-> \scilab{} can do this through ``scripts'' or ``executables''
+        \item<3-> \scinotes{} is \scilab's builtin-in GUI for handling scripts
+        \item<4-> Customary to save such files with \inlinecode{.sce} extension
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conditional statements}
+    Can you make sense of this?
+    \begin{lstlisting}
+        x=6;
+        reminder = modulo(x,3);
+        
+        if reminder==0 then
+            disp("3 divides x")
+        elseif reminder==1 then
+            disp("x leaves reminder 1 when divided by 3")
+        else
+            disp("x leaves reminder 2 when divided by 3")
+        end
+    \end{lstlisting}
+    \hint{look at help for function \inlinecode{modulo}}\\[1em]
+\onslide<2->
+    Logical expressions generally use \inlinecode{==, ~=, <, <=, >, >=, &&, \|\|, \%t, \%f}
+\end{frame}
+
+\begin{frame}[fragile]{Loops}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{lstlisting}[numbers=left]
+                array = 1:10;
+                value = 5;
+                
+                for a=array
+                    if value==a then
+                        disp("Value exists in array");
+                        break;
+                    end
+                end
+            \end{lstlisting}
+            What does \inlinecode{break} statement do?
+        \end{column}
+        \begin{column}{0.49\linewidth}
+            \onslide<2->
+            \scilab{} always loops over columns
+\onslide<3->
+            \begin{lstlisting}[numbers=left]
+                array=[1;2;3]
+                i=1;
+                for a=array
+                    disp("Element " + string(i) + ":")
+                    disp(a)
+                    i = i+1;
+                end
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Functions}
+    \begin{lstlisting}
+        function [Tf,Tk] = centigradeToFarenhietKelvin(Tc)
+            Tf = Tc*9/5 + 32;
+            Tk = Tc + 273;
+        endfunction
+        
+        [Tf,Tk] = centigradeToFarenhietKelvin(37);
+        disp(Tf)
+        disp(Tk)
+    \end{lstlisting}
+    Here \inlinecode{Tf} and \inlinecode{Tk} are the ``return'' values; \inlinecode{Tc} is the parameter\\[0.5em]
+\onslide<2->
+    Can also have multiple parameters
+    \begin{lstlisting}
+        function s = sum(a,b)
+            s = a+b;
+        endfunction
+        disp(sum(1,2));
+    \end{lstlisting}
+\end{frame}
 
 \end{document}
