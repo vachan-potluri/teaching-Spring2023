@@ -1,6 +1,7 @@
 \documentclass[%
     10pt,
     xcolor={dvipsnames},
+    compress, % places all miniframes in a single line
     % handout,
 ]{beamer}
 \usepackage{amsmath}
@@ -9,8 +10,11 @@
     isbn=false,
 ]{biblatex}
 \usepackage{lstautogobble}
-\usepackage[listings,skins,theorems,xparse]{tcolorbox}
+\usepackage{pgffor}
 \usepackage{siunitx}
+\usepackage[listings,skins,theorems,xparse]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{calc}
 \usetheme[miniframes,framenumber-footline]{Mumbai} % available at https://github.com/vachan-potluri/beamer_themes/tree/main/Mumbai
 
 
@@ -30,11 +34,11 @@
     language=Scilab,
     backgroundcolor=\color{gray!10},
     basicstyle=\linespread{1.25}\ttfamily\small,
-    commentstyle=\color{green!70!black},
+    commentstyle=\color{green!50!black},
     keywordstyle=\bfseries\color{blue},
     numberstyle=\color{gray}\sffamily\footnotesize,
     stringstyle=\color{red},
-    basewidth=0.6em,
+    basewidth=0.5em,
     breakatwhitespace=false,
     breaklines=true,
     postbreak=\hbox{$\hookrightarrow$},
@@ -49,11 +53,11 @@
     tabsize=2,
     morekeywords=[2]{\%t,\%f,\%pi,\%e,\%i,\%inf,\%nan,\%eps},
     keywordstyle=[2]\color{magenta},
-    morecomment=[s][\bfseries\color{orange!70}]{/*}{*/},
+    morecomment=[s][\bfseries\color{orange}]{/*}{*/},
     %morecomment=[l][\itshape\color{blue!30!green}]{//-},
     autogobble=true,
-    xleftmargin=1em,
-    xrightmargin=1em,
+    xleftmargin=0.25em,
+    %xrightmargin=1em,
 }
 \lstset{style=ScilabStyle}
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}} % for email ids
@@ -75,7 +79,7 @@
     fontupper=\ttfamily,
     drop fuzzy shadow,
 } % for printing keyboard keys
-\newtcolorbox[auto counter]{exercise}{%
+\newtcolorbox{exercise}{%
     code={
         \usebeamercolor{block title}
         \colorlet{titlebg}{bg}
@@ -89,7 +93,7 @@
     colback=bodybg,
     coltext=bodyfg,
     size=fbox,
-    title={Exercise~\thetcbcounter},
+    title={Exercise},
 }% boxed env for exercises
 
 
@@ -131,8 +135,8 @@
     \end{block}
 \end{frame}
 
-\section{\scilab{} console}
-\subsection{Advanced calculator}
+\section{Basics}
+\subsection{As a calculator}
 \begin{frame}[fragile]{Simple calculations}
     Try out these and see if they give expected results
     \begin{lstlisting}[numbers=left]
@@ -471,7 +475,8 @@
 }
 
 \section{Programming}
-\begin{frame}{\scinotes: built-in editor}
+\subsection{Getting familiar with script files}
+\begin{frame}[fragile]{\scinotes: built-in editor}
     \begin{itemize}
         \setitemsep{1em}
         \item Console is only useful for short calculations
@@ -479,6 +484,12 @@
         \item<2-> \scilab{} can do this through ``scripts'' or ``executables''
         \item<3-> \scinotes{} is \scilab's builtin-in GUI for handling scripts
         \item<4-> Customary to save such files with \inlinecode{.sce} extension
+        \item<5-> Comments being with \inlinecode{//}, or can be wrapped with \inlinecode{/* */}
+        \begin{lstlisting}
+            // this is a single line comment
+            /* this is a
+               multi-line comment */
+        \end{lstlisting}
     \end{itemize}
 \end{frame}
 
@@ -554,6 +565,118 @@
         endfunction
         disp(sum(1,2));
     \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Exercises}
+    \small
+    \vspace{-1em}
+    \begin{exercise}
+        Write a function to calculate the cross product of two 3d vectors
+        \begin{lstlisting}
+            function v = cross_product(v1,v2)
+                // fill this
+            endfunction
+        \end{lstlisting}
+    \end{exercise}
+\onslide<2->
+    \begin{exercise}
+        Write a function that takes in an array and a value, and returns the indices where the value occurs in an array.\\
+        Example: for \inlinecode{array=[1,2,1,4,5,2]} and \inlinecode{value=2}, the function should return \inlinecode{[2,6]} (since \inlinecode{array(2)=array(6)=value})
+        \begin{lstlisting}
+            function indices = multiple_find(array,value)
+                // fill this
+            endfunction
+        \end{lstlisting}
+    \end{exercise}
+\end{frame}
+
+\subsection{Multiple file projects}
+\begin{frame}[fragile]{Working with multiple files}
+    \begin{itemize}
+        \setitemsep{1em}
+        \item Many times we use different user-written functions to accomplish our task
+        \item Having them all in a single file makes it hard to read and debug
+        \item<2-> Splitting the script into multiple files is preferable
+        \begin{itemize}
+            \item One for each function
+            \item One main file
+        \end{itemize}
+        \item<3-> How to access content from another file?
+    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+\onslide<3->
+            \begin{lstlisting}[title={\small \inlinecode{my\_function\_file.sce}}]
+                function y=my_function(x)
+                    // do something
+                endfunction
+            \end{lstlisting}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+\onslide<4->
+            \begin{lstlisting}[title={\small \inlinecode{main.sce}}]
+                // 'include' the file
+                exec("my_function_file.sce",-1);
+                // use the function
+                result=my_function([1,2,3]);
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Exercises}
+    \begin{exercise}
+        \begin{enumerate}
+            \setitemsep{1em}
+            \item Recall the \inlinecode{cross_product()} function you have written previously. Save it in a file \inlinecode{cross_product.sce}
+            \item<2-> Write a file \inlinecode{vector_norm.sce} which contains a function \inlinecode{vector_norm()} to calculate the length (norm) of a 3d vector
+            \item<3-> Write a function to calculate the area of an arbitrarily oriented triangle
+            \begin{lstlisting}
+                function area = triangle_area(p1, p2, p3)
+                    // fill this
+                endfunction
+            \end{lstlisting}
+            \hint{The area of a triangle is half the magnitude of cross product of any of its two sides}
+        \end{enumerate}
+    \end{exercise}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{exercise}
+        We will calculate $\pi$ approximately here
+        \begin{enumerate}
+            \item Write a function \inlinecode{generate_random_2d()} which generates a random point in a 2d square $x \in [0,1],\ y \in [0,1]$. Write this function in a file (say \inlinecode{random_point.sce})\\
+            \hint{Use the \inlinecode{rand} function of \scilab}
+            \item<2-> Now write a function \inlinecode{in_circle()} which takes any point and returns a boolean value saying whether or not the point lies inside the unit circle $x^2+y^2=1$
+            \item<3-> Now write a function that takes $N$ is an parameter and does the following
+            \begin{itemize}
+                \item Generate $N$ random points
+                \item Find out how many of these points (say $N_i$) lie inside the unit circle
+                \item Return the value $N_i/N$
+            \end{itemize}
+        \end{enumerate}
+\onslide<3->
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+                \begin{equation*}
+                    \frac{N_i}{N} \to \frac{\pi}{4}\ \text{as}\ N \to \infty
+                \end{equation*}
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{figure}
+                    \centering
+                    \begin{tikzpicture}[x=4em,y=4em]
+                        \draw (0,0) rectangle (1,1);
+                        \draw [red] (1,0) arc[start angle=0, end angle=90, radius=1];
+                        \foreach \n in {1,2,...,25} {%
+                            % add random points in the unit square
+                            \fill[blue] (rand*0.5+0.5,rand*0.5+0.5) circle[radius=1pt];
+                        }
+                    \end{tikzpicture}
+                \end{figure}
+            \end{column}
+        \end{columns}
+    \end{exercise}
 \end{frame}
 
 \end{document}
