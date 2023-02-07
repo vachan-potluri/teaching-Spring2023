@@ -99,11 +99,6 @@
 
 
 
-\title{Scilab}
-\author[Vachan Potluri]{%
-    Vachan Potluri\\
-    \email{vachanpotluri@iitb.ac.in}
-}
 \addbibresource{references.bib}
 
 
@@ -117,6 +112,12 @@
 {
     \setbeamertemplate{headline}{}
     \setbeamertemplate{footline}{}
+    \title{Scilab}
+    \author[Vachan Potluri]{%
+        Vachan Potluri\\
+        \email{vachanpotluri@iitb.ac.in}
+    }
+    \date{Spring 2023}
     \begin{frame}
         \titlepage
     \end{frame}
@@ -618,7 +619,7 @@
                 // 'include' the file
                 exec("my_function_file.sce",-1);
                 // use the function
-                result=my_function([1,2,3]);
+                result=my_function(2.5);
             \end{lstlisting}
         \end{column}
     \end{columns}
@@ -630,7 +631,7 @@
             \setitemsep{1em}
             \item Recall the \inlinecode{cross_product()} function you have written previously. Save it in a file \inlinecode{cross_product.sce}
             \item<2-> Write a file \inlinecode{vector_norm.sce} which contains a function \inlinecode{vector_norm()} to calculate the length (norm) of a 3d vector
-            \item<3-> Write a function to calculate the area of an arbitrarily oriented triangle
+            \item<3-> Now in the file \inlinecode{triangle_area.sce}, write a function to calculate the area of an arbitrarily oriented triangle with points $p_1$, $p_2$ and $p_3$
             \begin{lstlisting}
                 function area = triangle_area(p1, p2, p3)
                     // fill this
@@ -645,7 +646,7 @@
     \begin{exercise}
         We will calculate $\pi$ approximately here
         \begin{enumerate}
-            \item Write a function \inlinecode{generate_random_2d()} which generates a random point in a 2d square $x \in [0,1],\ y \in [0,1]$. Write this function in a file (say \inlinecode{random_point.sce})\\
+            \item Write a function \inlinecode{generate_random_2d()} which generates a random point in a 2d square $x \in [0,1],\ y \in [0,1]$\\
             \hint{Use the \inlinecode{rand} function of \scilab}
             \item<2-> Now write a function \inlinecode{in_circle()} which takes any point and returns a boolean value saying whether or not the point lies inside the unit circle $x^2+y^2=1$
             \item<3-> Now write a function that takes $N$ is an parameter and does the following
