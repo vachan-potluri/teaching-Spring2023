@@ -310,7 +310,6 @@
 \onslide<3->
             Special element wise operations
             \begin{lstlisting}
-                A.+B
                 A.*B
                 A.^B
                 A./B
@@ -458,6 +457,7 @@
                     \item $Q=\numlist{50;100;200;400;1000}$
                     \item $D=\numlist{0.5;1;1;2;4}$
                 \end{itemize}
+                Use $C=2.5$ for all cases
             \end{exercise}
         \end{column}
         \begin{column}{0.49\linewidth}
@@ -466,9 +466,9 @@
                 A magic square is a matrix in which all rows, columns and diagonals sum to same number.
                 \begin{enumerate}
                     \item Generate a magic square of size 10
-                    \item Verify its properties
+                    \item Verify that all rows and columns sum up to the same value
                 \end{enumerate}
-                \hint{search \scilab{} help for the function \inlinecode{testmatrix}}
+                \hint{search \scilab{} help for the function \inlinecode{testmatrix}, and use the \inlinecode{sum} function}
             \end{exercise}
         \end{column}
     \end{columns}
@@ -646,10 +646,10 @@
     \begin{exercise}
         We will calculate $\pi$ approximately here
         \begin{enumerate}
-            \item Write a function \inlinecode{generate_random_2d()} which generates a random point in a 2d square $x \in [0,1],\ y \in [0,1]$\\
+            \item Write a function \inlinecode{get_random_point()} which generates a random point in a 2d square $x \in [0,1],\ y \in [0,1]$\\
             \hint{Use the \inlinecode{rand} function of \scilab}
-            \item<2-> Now write a function \inlinecode{in_circle()} which takes any point and returns a boolean value saying whether or not the point lies inside the unit circle $x^2+y^2=1$
-            \item<3-> Now write a function that takes $N$ is an parameter and does the following
+            \item<2-> Now write a function \inlinecode{inside_circle()} which takes any point and returns a boolean value saying whether or not the point lies inside the unit circle $x^2+y^2=1$
+            \item<3-> Now write a function \inlinecode{approximate_pi()} that takes $N$ is an parameter and does the following
             \begin{itemize}
                 \item Generate $N$ random points
                 \item Find out how many of these points (say $N_i$) lie inside the unit circle
@@ -677,6 +677,7 @@
                 \end{figure}
             \end{column}
         \end{columns}
+        This is called as a Monte-Carlo simulation
     \end{exercise}
 \end{frame}
 
