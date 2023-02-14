@@ -475,11 +475,14 @@
     \begin{itemize}
         \setitemsep{1em}
         \item Console is only useful for short calculations
-        \item A single file containing all commands is useful for large calculations
-        \item<2-> \scilab{} can do this through ``scripts'' or ``executables''
-        \item<3-> \scinotes{} is \scilab's builtin-in GUI for handling scripts
-        \item<4-> Customary to save such files with \inlinecode{.sce} extension
-        \item<5-> Comments being with \inlinecode{//}, or can be wrapped with \inlinecode{/* */}
+        \begin{itemize}
+            \item Imagine typing 10s of commands again after changing just one input
+        \end{itemize}
+        \item<2-> A single file containing all commands is useful for large calculations
+        \item<3-> Such files are called ``scripts'' or ``executables''
+        \item<4-> \scinotes{} is \scilab's built-in GUI for handling scripts
+        \item<5-> Customary to save such files with \inlinecode{.sce} or \inlinecode{.sci} extension
+        \item<6-> Comments begin with \inlinecode{//}, or can be wrapped with \inlinecode{/* */}
         \begin{lstlisting}
             // this is a single line comment
             /* this is a
@@ -510,7 +513,7 @@
 \begin{frame}[fragile]{Loops}
     \begin{columns}
         \begin{column}{0.5\linewidth}
-            \begin{lstlisting}[numbers=left]
+            \begin{lstlisting}
                 array = 1:10;
                 value = 5;
                 
@@ -527,7 +530,7 @@
             \onslide<2->
             \scilab{} always loops over columns
 \onslide<3->
-            \begin{lstlisting}[numbers=left]
+            \begin{lstlisting}
                 array=[1;2;3]
                 i=1;
                 for a=array
@@ -589,18 +592,18 @@
 \begin{frame}[fragile]{Working with multiple files}
     \begin{itemize}
         \setitemsep{1em}
-        \item Many times we use different user-written functions to accomplish our task
-        \item Having them all in a single file makes it hard to read and debug
-        \item<2-> Splitting the script into multiple files is preferable
+        \item Many times we use multiple user-written functions to accomplish our task
+        \item<2-> Having them all in a single file makes it hard to read and debug
+        \item<3-> Splitting the script into multiple files is preferable
         \begin{itemize}
             \item One for each function
             \item One main file
         \end{itemize}
-        \item<3-> How to access content from another file?
+        \item<4-> How to access content from another file?
     \end{itemize}
     \begin{columns}
         \begin{column}{0.5\linewidth}
-\onslide<3->
+\onslide<4->
             \begin{lstlisting}[title={\small \inlinecode{my\_function\_file.sce}}]
                 function y=my_function(x)
                     // do something
@@ -608,7 +611,7 @@
             \end{lstlisting}
         \end{column}
         \begin{column}{0.5\linewidth}
-\onslide<4->
+\onslide<5->
             \begin{lstlisting}[title={\small \inlinecode{main.sce}}]
                 // 'include' the file
                 exec("my_function_file.sce",-1);
