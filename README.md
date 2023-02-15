@@ -5,4 +5,4 @@ Repository containing all material used for teaching Scilab and OpenFOAM at VJTI
 ## Scilab
 
 - You can see the class slides here: [scilab/scilab_handout.pdf](scilab/scilab_handout.pdf)
-- The dummy files for exercises are all here: [scilab/exercises](scilab/exercises)
+- The solutions to some of the class exercises here: [scilab/exercises](scilab/exercises)

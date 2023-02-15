@@ -1,13 +1,10 @@
-function v = cross_product(v1,v2)
-    // fill this
-    // hint: v[1] = v1[2]*v2[3] - v1[3]*v2[2] and so on
-endfunction
+function v = cross_product(a, b)
+    // this function calculates the cross product of two vectors
+    // it mimics Scilab's in-built function "cross"
 
-// Test your function here
-// try different choices for v1 and v2
-/*
-v1 = [1,0,0];
-v2 = [0,1,0];
-result = cross_product(v1,v2);
-disp(result);
-*/
+    v = zeros(1,3); // set the shape of v vector: 1x3 row vector
+
+    v(1) = a(2)*b(3) - a(3)*b(2);
+    v(2) = a(3)*b(1) - a(1)*b(3);
+    v(3) = a(1)*b(2) - a(2)*b(1);
+endfunction

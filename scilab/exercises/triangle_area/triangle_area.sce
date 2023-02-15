@@ -2,17 +2,33 @@
 exec("cross_product.sce", -1);
 exec("vector_norm.sce", -1);
 
-function A = triangle_area(p1,p2,p3)
-    // fill this
-    // hint: the sides of triangle can be obtained by subtracting the point coordinates
-    // calculate cross product of any of the sides, and take the norm
+function area = triangle_area(p1, p2, p3)
+    // this function calculates the area of a triangle, taking three points as the inputs
+    // the area of a triangle is half the magnitude of cross product of any of its two sides
+
+    side1 = p2-p1;
+    side2 = p3-p1;
+    area = 0.5*(vector_norm(cross_product(side1, side2)));
 endfunction
 
-// check your function here
-// try different choices for p1, p2 and p3
-/*
-p1 = [1,0,0];
-p2 = [0,1,0];
-p3 = [0,0,0];
-disp(triangle_area(p1,p2,p3));
-*/
+function pass_fail = test_triangle_area(p1, p2, p3, expected_area)
+    // this function tests the function "triangle_area"
+    // by comparing the output with "expected area"
+    disp("Input points:");
+    disp(p1, p2, p3);
+    area = triangle_area(p1, p2, p3);
+    disp("Obtained area:");
+    disp(area);
+    disp("Expected area:");
+    disp(expected_area);
+    pass_fail = (area==expected_area);
+    if pass_fail then
+        disp("Test passed");
+    else
+        disp("Test failed");
+    end
+    clc;
+endfunction
+
+test_triangle_area([0,0,0], [1,0,0], [0,1,0], 0.5);
+test_triangle_area([0,0,0], [2,0,0], [-1,1,0], 1);
