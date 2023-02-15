@@ -1,6 +1,6 @@
 function indices = multiple_find(array, value)
     // this function returns the index locations in "array"
-    // where its elements take are equal to "value"
+    // where its elements are equal to "value"
 
     indices = []; // initialise to an empty array
 
