@@ -9,7 +9,7 @@ function v = cross_product(a, b)
     v(3) = a(1)*b(2) - a(2)*b(1);
 endfunction
 
-function pass_fail = test_cross_product(a, b)
+function pass_flag = test_cross_product(a, b)
     // this function tests the "cross_product" function by comparing
     // the result with Scilab's "cross" function
     disp("Inputs:");
@@ -20,9 +20,9 @@ function pass_fail = test_cross_product(a, b)
     disp(result);
     disp("Scilab result:");
     disp(scilab_result);
-    pass_fail = and(result == scilab_result);
+    pass_flag = and(result == scilab_result);
 
-    if pass_fail then
+    if pass_flag then
         disp("Test passed");
     else
         disp("Test failed");

@@ -11,7 +11,7 @@ function area = triangle_area(p1, p2, p3)
     area = 0.5*(vector_norm(cross_product(side1, side2)));
 endfunction
 
-function pass_fail = test_triangle_area(p1, p2, p3, expected_area)
+function pass_flag = test_triangle_area(p1, p2, p3, expected_area)
     // this function tests the function "triangle_area"
     // by comparing the output with "expected area"
     disp("Input points:");
@@ -21,8 +21,8 @@ function pass_fail = test_triangle_area(p1, p2, p3, expected_area)
     disp(area);
     disp("Expected area:");
     disp(expected_area);
-    pass_fail = (area==expected_area);
-    if pass_fail then
+    pass_flag = (area==expected_area);
+    if pass_flag then
         disp("Test passed");
     else
         disp("Test failed");

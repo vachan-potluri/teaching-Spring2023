@@ -13,7 +13,7 @@ function indices = multiple_find(array, value)
     end
 endfunction
 
-function pass_fail = test_multiple_find(array, value, expected_result)
+function pass_flag = test_multiple_find(array, value, expected_result)
     // this function tests the "multiple_find" function
     // by comparing its output with "expected_result"
     disp("Input array:");
@@ -25,8 +25,8 @@ function pass_fail = test_multiple_find(array, value, expected_result)
     disp(expected_result);
     disp("Obtained result");
     disp(result)
-    pass_fail = and(result == expected_result)
-    if pass_fail then
+    pass_flag = and(result == expected_result)
+    if pass_flag then
         disp("Test passed");
     else
         disp("Test failed");
