@@ -6,6 +6,8 @@
 \usepackage{lstautogobble}
 \usepackage{pgffor}
 \usepackage{siunitx}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs,siunitx}
 \usepackage[listings,skins,theorems,xparse]{tcolorbox}
 \usepackage{tikz}
 \usetikzlibrary{calc}
@@ -674,7 +676,238 @@
                 \end{figure}
             \end{column}
         \end{columns}
-        This is called as a Monte-Carlo simulation
+        This is known as the Monte-Carlo simulation
+    \end{exercise}
+\end{frame}
+
+\section{Plotting}
+
+\begin{frame}{A useful feature: plotting ability}
+    \begin{itemize}
+        \setitemsep{0.5em}
+        \item Many basic programming languages do not have inbuilt plotting ability
+        \item<2-> Results are written to a file which is used by a different software for plotting
+        \item<3-> High level programming languages like \scilab{} also have inbuilt plotting capability
+        \begin{itemize}
+            \item Useful to visualise results
+        \end{itemize}
+        \item<4-> Our focus
+        \begin{enumerate}
+            \item 1d plotting: line plots
+            \item 2d plotting: surface, contour and vector plots
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+\subsection{Line plots}
+
+\begin{frame}[fragile]{Single line plot}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{lstlisting}
+                x = linspace(-%pi,%pi);
+                y = sin(x);
+                
+                f = figure(1);
+                plot(x,y);
+            \end{lstlisting}
+\onslide<2->
+            \vspace{1em}
+            Too plain, let's add some description
+            \begin{lstlisting}
+                help axes_properties
+                help xs2png
+            \end{lstlisting}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+\onslide<3->
+            \begin{lstlisting}
+                ax = gca();
+                ax.parent.background = -2;
+                ax.tight_limits(1)="on";
+                ax.font_size=3;
+                ax.grid=[1,1];
+                ax.title.text="A sample plot";
+                ax.title.font_size=5;
+                ax.y_label.text="sin(x)";
+                ax.y_label.font_size=4;
+                ax.x_label.text="x";
+                ax.x_label.font_size=4;
+                xs2png(f, "sin_plot.png");
+            \end{lstlisting}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Multiple line plots}
+    \begin{lstlisting}
+        x = linspace(-%pi,%pi);
+        y1 = sin(x);
+        y2 = cos(x);
+        y3 = 0.5+sin(x);
+        
+        f = figure(1);
+        plot(x,y1,"r-^");
+        plot(x,y2,"b--o");
+        plot(x,y3,"g:*");
+        ax = gca();
+        legend_names = ["curve1", "cos(x)", "curve3"];
+        legend(ax, legened_names, 1);
+    \end{lstlisting}
+\onslide<2->
+    \begin{lstlisting}
+        help LineSpec
+        help legend
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \begin{exercise}
+        \begin{enumerate}
+            \item Plot $\rho(x)$ for $x \in [-5,5]$
+            \begin{equation*}
+                \rho(x) =
+                \begin{cases}
+                    1+0.2\sin(5x) & x \ge -4\\
+                    5 & \text{otherwise}
+                \end{cases}
+            \end{equation*}
+            \item Using a line plot, find the maximum of $f(x,y) = x^2 + 2y^2$ subjected to $y=\frac{1}{x}+2$\\
+            \hint{Plot $f\left(x,\frac{1}{x}+2\right)$ vs $x$}
+            \item The following is a convergence history of a simulation
+            \begin{table}
+                \centering
+                \begin{tblr}{%
+                        colspec=*{2}{S},
+                        row{1}=guard,
+                    }
+                    \toprule
+                    Iteration ($n$) & Error ($E$) \\
+                    \midrule
+                    100 & 1e-2 \\
+                    200 & 1e-3 \\
+                    \bottomrule
+                \end{tblr}
+            \end{table}
+            Assuming $\log (E)$ varies linearly with $n$, find at what iteration will the error reach \num{1e-8}
+        \end{enumerate}
+    \end{exercise}
+\end{frame}
+
+\subsection{Surface, contour and vector plots}
+\begin{frame}[fragile]{Surface plot}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+        x = %pi*linspace(-1,1,100);
+        y = %pi*linspace(-1,1,25);
+        
+        z = zeros(length(x), length(y));
+        for i = 1:length(x)
+            for j = 1:length(y)
+                z(i,j) = sin(x(i))*sin(y(j));
+            end
+        end
+        
+        f = figure(1);
+        f.color_map = jetcolormap(64);
+        grayplot(x,y,z);
+        colorbar(min(z), max(z));
+        ax = gca();
+        ax.parent.background = -2;
+        ax.tight_limits(1:2) = "on";
+    \end{lstlisting}
+\onslide<2->
+    Also see \inlinecode{colormap} and \inlinecode{Sgrayplot}
+\end{frame}
+
+\begin{frame}[fragile]{3d surface plot}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+        x = %pi*linspace(-1,1,100);
+        y = %pi*linspace(-1,1,25);
+        
+        z = zeros(length(x), length(y));
+        for i = 1:length(x)
+            for j = 1:length(y)
+                z(i,j) = sin(x(i))*sin(y(j));
+            end
+        end
+        
+        f = figure(1);
+        f.color_map = jetcolormap(64);
+        plot3d(x,y,z);
+        // gce().color_flag = 1; // color according to z values
+        colorbar(min(z), max(z));
+        ax = gca();
+        ax.parent.background = -2;
+        ax.tight_limits(1:2) = "on";
+    \end{lstlisting}
+    You can interact with the 3d plot
+\end{frame}
+
+\begin{frame}[fragile]{Contour plot}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+        x = %pi*linspace(-1,1,100);
+        y = %pi*linspace(-1,1,25);
+        
+        z = zeros(length(x), length(y));
+        for i = 1:length(x)
+            for j = 1:length(y)
+                z(i,j) = sin(x(i))*sin(y(j));
+            end
+        end
+        
+        f = figure(1);
+        f.color_map = jetcolormap(16);
+        contour(x,y,z,16);
+        // xset("fpf", " "); // floating point format of contour values
+        colorbar(min(z), max(z));
+        ax = gca();
+        ax.parent.background = -2;
+        ax.tight_limits(1:2) = "on";
+    \end{lstlisting}
+\onslide<2->
+    Also see \inlinecode{contourf} and \inlinecode{fpf}
+\end{frame}
+
+\begin{frame}[fragile]{Vector plot}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+        x = linspace(-1,1,20);
+        y = linspace(-1,1,20);
+        
+        u = zeros(length(x), length(y));
+        v = zeros(length(x), length(y));
+        
+        for i = 1:length(x)
+            for j = 1:length(y)
+                u(i,j) = -y(j);
+                v(i,j) = x(i);
+            end
+        end
+        vel_mag = (u.*u + v.*v).^0.5;
+        
+        f = figure(1);
+        f.color_map = jetcolormap(64);
+        champ(x,y,u,v,arfact=0.5);
+        gce().colored = "on";
+        gca().parent.background=-2;
+        colorbar(min(vel_mag), max(vel_mag));
+    \end{lstlisting}
+\onslide<2->
+    What does \inlinecode{arfact} do? Tinker and see
+\end{frame}
+
+\begin{frame}
+    \begin{exercise}
+        \begin{itemize}
+            \item The stream function for inviscid potential flow around a cylinder of radius $R$ is given by
+            \begin{equation*}
+                \psi = \left[ r - \frac{R^2}{r} \right] U \sin \theta
+            \end{equation*}
+            where $U$ is the free stream velocity. Plot the contours of the stream function for a cylinder of radius \SI{0.5}{\meter} in a free stream with velocity $U=\SI{1}{\meter\per\second}$ in the domain $x \in [-1,1]$ and $y \in [-1,1]$.\\
+            \hint{You may require $r=\sqrt{x^2+y^2}$ and $\theta=\tan^{-1}(y/x)$}
+            \item<2-> Similarly show the surface plot of the pressure coefficient
+            \begin{equation*}
+                c_p = 2\frac{p-p_\infty}{\rho U^2}p = 2\frac{R^2}{r^2} \cos 2\theta - \frac{R^4}{r^4}
+            \end{equation*}
+        \end{itemize}
     \end{exercise}
 \end{frame}
 
