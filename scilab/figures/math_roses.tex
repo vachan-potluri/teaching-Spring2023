@@ -1,0 +1,41 @@
+\documentclass[tikz]{standalone}
+\usepackage{etoolbox}
+
+\begin{document}
+\begin{tikzpicture}
+    \pgfmathsetmacro\nmax{7}
+    \pgfmathsetmacro\dmax{9}
+    \pgfmathsetmacro\diamax{1} % max dia available for rose plotting
+    \foreach \n in {1,2,...,\nmax} {%
+        \foreach \d in {1,2,...,\dmax} {%
+            \begin{scope}[
+                xshift=(\n-1)*\diamax cm,
+                yshift=-(\d-1)*\diamax cm,
+                x=0.4*\diamax cm,
+                y=0.4*\diamax cm,
+            ]
+                % labels
+                \ifnumequal{\n}{1}{%
+                    \ifnumequal{\d}{\dmax}{\def\text{$d=\d$}}{\def\text{$\d$}}
+                    \node at (-1,0) [above, rotate=90] {\scriptsize \text};
+                }{}
+                \ifnumequal{\d}{1}{%
+                    \ifnumequal{\n}{1}{\def\text{$n=\n$}}{\def\text{$\n$}}
+                    \node at (0,1) [above] {\scriptsize \text};
+                }{}
+                % draw bounding region
+                \fill [gray!10] (0,0) circle [radius=1];
+                % draw rose
+                \draw [blue] plot [
+                    variable=\theta,
+                    domain=0:360*\d,
+                    samples=100*\d
+                ] (
+                    {cos(\n/\d*\theta)*cos(\theta)},
+                    {cos(\n/\d*\theta)*sin(\theta)}
+                );
+            \end{scope}
+        }
+    }
+\end{tikzpicture}
+\end{document}

@@ -667,14 +667,7 @@
             \begin{column}{0.5\linewidth}
                 \begin{figure}
                     \centering
-                    \begin{tikzpicture}[x=4em,y=4em]
-                        \draw (0,0) rectangle (1,1);
-                        \draw [red] (1,0) arc[start angle=0, end angle=90, radius=1];
-                        \foreach \n in {1,2,...,25} {%
-                            % add random points in the unit square
-                            \fill[blue] (rand*0.5+0.5,rand*0.5+0.5) circle[radius=1pt];
-                        }
-                    \end{tikzpicture}
+                    \includegraphics{figures/monte_carlo_pi}
                 \end{figure}
             \end{column}
         \end{columns}
@@ -925,41 +918,14 @@
                     y = r \sin \theta
                 \end{gather*}
                 Here $n$ and $d$ are integers.\\[1em]
-                Generate mathematical roses for $1 \le n \le 7$ and $1 \le d \le 9$.
+                Generate mathematical roses for $1 \le n \le 7$ and $1 \le d \le 9$.\\[0.5em]
+                \hint{To put them all in a single picture, consult help for \inlinecode{subplot}}
             \end{exercise}
         \end{column}
         \begin{column}{0.59\linewidth}
-            \begin{tikzpicture}
-                \pgfmathsetmacro\nmax{7}
-                \pgfmathsetmacro\dmax{9}
-                \pgfmathsetmacro\lw{\linewidth/1 cm} % line width in cms
-                \pgfmathsetmacro\diamax{0.95*\lw/\nmax} % max dia available for rose plotting
-                \foreach \n in {1,2,...,\nmax} {%
-                    \foreach \d in {1,2,...,\dmax} {%
-                        \begin{scope}[
-                            xshift=(\n-1)*\diamax cm,
-                            yshift=-(\d-1)*\diamax cm,
-                            x=0.4*\diamax cm,
-                            y=0.4*\diamax cm,
-                        ]
-                            % labels
-                            \ifnumequal{\n}{1}{\node at (-1,0) [above, rotate=90] {\scriptsize $d=\d$};}{}
-                            \ifnumequal{\d}{1}{\node at (0,1) [above] {\scriptsize $n=\n$};}{}
-                            % draw bounding region
-                            \fill [gray!10] (0,0) circle [radius=1];
-                            % draw rose
-                            \draw [blue] plot [
-                                variable=\theta,
-                                domain=0:360*\d,
-                                samples=100*\d
-                            ] (
-                                {cos(\n/\d*\theta)*cos(\theta)},
-                                {cos(\n/\d*\theta)*sin(\theta)}
-                            );
-                        \end{scope}
-                    }
-                }
-            \end{tikzpicture}
+            \begin{figure}
+                \includegraphics[width=\linewidth]{figures/math_roses}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
