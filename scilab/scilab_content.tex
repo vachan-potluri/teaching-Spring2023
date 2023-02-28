@@ -3,6 +3,7 @@
 \usepackage[%
     isbn=false,
 ]{biblatex}
+\usepackage{etoolbox}
 \usepackage{lstautogobble}
 \usepackage{pgffor}
 \usepackage{siunitx}
@@ -25,12 +26,13 @@
     leftrule=0pt,
     rightrule=0pt,
 }{\lstinline|#1|} % for printing inline code
+\colorlet{ScilabComment}{green!50!black}
 \lstdefinestyle{ScilabStyle}{%
     % scilab formatting style
     language=Scilab,
     backgroundcolor=\color{gray!10},
     basicstyle=\linespread{1.25}\ttfamily\small,
-    commentstyle=\color{green!50!black},
+    commentstyle=\color{ScilabComment},
     keywordstyle=\bfseries\color{blue},
     numberstyle=\color{gray}\sffamily\footnotesize,
     stringstyle=\color{red},
@@ -682,15 +684,13 @@
 
 \section{Plotting}
 
+\subsection{Introduction}
 \begin{frame}{A useful feature: plotting ability}
     \begin{itemize}
-        \setitemsep{0.5em}
+        \setitemsep{1em}
         \item Many basic programming languages do not have inbuilt plotting ability
-        \item<2-> Results are written to a file which is used by a different software for plotting
-        \item<3-> High level programming languages like \scilab{} also have inbuilt plotting capability
-        \begin{itemize}
-            \item Useful to visualise results
-        \end{itemize}
+        \item<2-> Results are written to a file\\which is used by a different software for plotting
+        \item<3-> High level programming languages like \scilab{}\\also have inbuilt plotting capability
         \item<4-> Our focus
         \begin{enumerate}
             \item 1d plotting: line plots
@@ -698,8 +698,8 @@
         \end{enumerate}
     \end{itemize}
 \end{frame}
-\subsection{Line plots}
 
+\subsection{Line plots}
 \begin{frame}[fragile]{Single line plot}
     \begin{columns}
         \begin{column}{0.5\linewidth}
@@ -754,15 +754,13 @@
         legend(ax, legened_names, 1);
     \end{lstlisting}
 \onslide<2->
-    \begin{lstlisting}
-        help LineSpec
-        help legend
-    \end{lstlisting}
+    Consult help of \inlinecode{LineSpec} and \inlinecode{legend}
 \end{frame}
 
 \begin{frame}
     \begin{exercise}
         \begin{enumerate}
+            \setitemsep{1em}
             \item Plot $\rho(x)$ for $x \in [-5,5]$
             \begin{equation*}
                 \rho(x) =
@@ -771,9 +769,9 @@
                     5 & \text{otherwise}
                 \end{cases}
             \end{equation*}
-            \item Using a line plot, find the maximum of $f(x,y) = x^2 + 2y^2$ subjected to $y=\frac{1}{x}+2$\\
+            \item<2-> Using a line plot, find the maximum of $f(x,y) = x^2 + 2y^2$ subjected to $y=\frac{1}{x}+2$\\
             \hint{Plot $f\left(x,\frac{1}{x}+2\right)$ vs $x$}
-            \item The following is a convergence history of a simulation
+            \item<3-> The following is a convergence history of a simulation
             \begin{table}
                 \centering
                 \begin{tblr}{%
@@ -795,14 +793,14 @@
 
 \subsection{Surface, contour and vector plots}
 \begin{frame}[fragile]{Surface plot}
-    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+    \begin{lstlisting}[basicstyle=\small\ttfamily\linespread{1}, mathescape]
         x = %pi*linspace(-1,1,100);
         y = %pi*linspace(-1,1,25);
         
         z = zeros(length(x), length(y));
         for i = 1:length(x)
             for j = 1:length(y)
-                z(i,j) = sin(x(i))*sin(y(j));
+                z(i,j) = sin(x(i))*sin(y(j)); // important $\color{ScilabComment} z_{i,j}=z(x_i,y_j)$
             end
         end
         
@@ -815,11 +813,12 @@
         ax.tight_limits(1:2) = "on";
     \end{lstlisting}
 \onslide<2->
-    Also see \inlinecode{colormap} and \inlinecode{Sgrayplot}
+    Also see help for \inlinecode{colormap} and \inlinecode{Sgrayplot}
 \end{frame}
 
 \begin{frame}[fragile]{3d surface plot}
-    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+    \vspace{-0.5em}
+    \begin{lstlisting}[basicstyle=\small\ttfamily\linespread{1}]
         x = %pi*linspace(-1,1,100);
         y = %pi*linspace(-1,1,25);
         
@@ -839,11 +838,13 @@
         ax.parent.background = -2;
         ax.tight_limits(1:2) = "on";
     \end{lstlisting}
+\onslide<2->
     You can interact with the 3d plot
 \end{frame}
 
 \begin{frame}[fragile]{Contour plot}
-    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+    \vspace{-0.5em}
+    \begin{lstlisting}[basicstyle=\small\ttfamily\linespread{1}]
         x = %pi*linspace(-1,1,100);
         y = %pi*linspace(-1,1,25);
         
@@ -864,11 +865,12 @@
         ax.tight_limits(1:2) = "on";
     \end{lstlisting}
 \onslide<2->
-    Also see \inlinecode{contourf} and \inlinecode{fpf}
+    Also consult help of \inlinecode{contourf} and \inlinecode{fpf}
 \end{frame}
 
 \begin{frame}[fragile]{Vector plot}
-    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily\linespread{1.2}]
+    \vspace{-0.5em}
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily\linespread{1.1}]
         x = linspace(-1,1,20);
         y = linspace(-1,1,20);
         
@@ -897,18 +899,69 @@
 \begin{frame}
     \begin{exercise}
         \begin{itemize}
-            \item The stream function for inviscid potential flow around a cylinder of radius $R$ is given by
+            \setitemsep{1em}
+            \item The stream function for inviscid potential flow around a cylinder of radius $R$ immersed in a free stream of velocity $U$ is given by
             \begin{equation*}
                 \psi = \left[ r - \frac{R^2}{r} \right] U \sin \theta
             \end{equation*}
-            where $U$ is the free stream velocity. Plot the contours of the stream function for a cylinder of radius \SI{0.5}{\meter} in a free stream with velocity $U=\SI{1}{\meter\per\second}$ in the domain $x \in [-1,1]$ and $y \in [-1,1]$.\\
+            Plot the contours of the stream function for a cylinder of radius \SI{0.5}{\meter} in a free stream with velocity $U=\SI{1}{\meter\per\second}$ in the domain $x \in [-1,1]$ and $y \in [-1,1]$.\\
             \hint{You may require $r=\sqrt{x^2+y^2}$ and $\theta=\tan^{-1}(y/x)$}
-            \item<2-> Similarly show the surface plot of the pressure coefficient
+            \item<2-> Similarly obtain a surface plot of the pressure coefficient
             \begin{equation*}
                 c_p = 2\frac{p-p_\infty}{\rho U^2}p = 2\frac{R^2}{r^2} \cos 2\theta - \frac{R^4}{r^4}
             \end{equation*}
         \end{itemize}
     \end{exercise}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.4\linewidth}
+            \begin{exercise}
+                A mathematical rose is described by the curve
+                \begin{gather*}
+                    r(\theta) = \cos \left( \frac{n}{d} \theta \right)\\
+                    x = r \cos \theta \\
+                    y = r \sin \theta
+                \end{gather*}
+                Here $n$ and $d$ are integers.\\[1em]
+                Generate mathematical roses for $1 \le n \le 7$ and $1 \le d \le 9$.
+            \end{exercise}
+        \end{column}
+        \begin{column}{0.59\linewidth}
+            \begin{tikzpicture}
+                \pgfmathsetmacro\nmax{7}
+                \pgfmathsetmacro\dmax{9}
+                \pgfmathsetmacro\lw{\linewidth/1 cm} % line width in cms
+                \pgfmathsetmacro\diamax{0.95*\lw/\nmax} % max dia available for rose plotting
+                \foreach \n in {1,2,...,\nmax} {%
+                    \foreach \d in {1,2,...,\dmax} {%
+                        \begin{scope}[
+                            xshift=(\n-1)*\diamax cm,
+                            yshift=-(\d-1)*\diamax cm,
+                            x=0.4*\diamax cm,
+                            y=0.4*\diamax cm,
+                        ]
+                            % labels
+                            \ifnumequal{\n}{1}{\node at (-1,0) [above, rotate=90] {\scriptsize $d=\d$};}{}
+                            \ifnumequal{\d}{1}{\node at (0,1) [above] {\scriptsize $n=\n$};}{}
+                            % draw bounding region
+                            \fill [gray!10] (0,0) circle [radius=1];
+                            % draw rose
+                            \draw [blue] plot [
+                                variable=\theta,
+                                domain=0:360*\d,
+                                samples=100*\d
+                            ] (
+                                {cos(\n/\d*\theta)*cos(\theta)},
+                                {cos(\n/\d*\theta)*sin(\theta)}
+                            );
+                        \end{scope}
+                    }
+                }
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}
