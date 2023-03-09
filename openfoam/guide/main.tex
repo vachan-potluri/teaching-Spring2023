@@ -1,0 +1,68 @@
+\documentclass[10pt,a5paper]{article}
+
+\usepackage[cochineal]{newtx} % font packages first
+\usepackage{csquotes}
+\usepackage[margin=0.5in,right=1in,marginparwidth=1in]{geometry}
+\usepackage{marginnote}
+\usepackage{setspace}
+\usepackage{xcolor}
+\usepackage[%
+    colorlinks
+]{hyperref}
+
+
+
+\colorlet{keywordcolor}{red}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\keyword}[1]{%
+    \textcolor{keywordcolor}{\bfseries #1}
+    \marginnote{\parbox[1]{\marginparwidth}{\raggedright\footnotesize\bfseries\textcolor{keywordcolor}{#1}}}
+}
+\newcommand{\openfoam}{\software{OpenFOAM}}
+\newcommand{\paraview}{\software{ParaView}}
+\newcommand{\software}[1]{\textsf{#1}}
+\setlength{\parskip}{0.5em}
+
+
+
+\begin{document}
+
+\setstretch{1.1}
+
+\title{A quick guide to getting started with \openfoam}
+\author{Vachan Potluri}
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+\openfoam{} is a software for performing numerical simulations.
+
+\subsection{\openfoam{} is a software \ldots}
+\label{sec:intro_subsec:software}
+More specifically, it is a free and \keyword{open source} software. That means the underlying files that are used to develop the software are given to users. These \enquote{underlying files} are called the \keyword{source code}. Advanced users often modify this source code for their custom applications.
+
+\par \openfoam{} doesn't have a graphical user interface (GUI). The user communicates with \openfoam{} through files and commands. This makes it less suitable for \software{Windows} users who are more familiar with GUI. However, \openfoam{} commands are very simple to use, and you can very quickly get familiar with them.
+
+\par Since \openfoam{} does not have a GUI, it does not have a visualisation interface of its own, but is uses a software named \paraview{} for this purpose. \openfoam{} installs \paraview{} by itself without requiring any additional installation steps.
+
+\subsection{\ldots for performing numerical simulation}
+\label{sec:intro_subsec:simulation}
+\openfoam{} can perform simulation of various kinds of physical problems: heat conduction, fluid flow, elastic deformation, combustion etc. \openfoam{} has different \keyword{solvers} for simulating each of these physical applications.
+
+\par In addition to solvers, \openfoam{} also has some tools that are useful before and after a simulation. For example, if you want to simulate flow over a F1 race car, then \openfoam{} can also generate the mesh required for the simulation. After the simulation, it can calculate the net drag force on the car. Such tools are called \keyword{applications}.
+
+\section{Installation}
+\label{sec:installation}
+These links contain instructions for installation of \openfoam{} in detail.
+\begin{itemize}
+    \item For \software{Ubuntu}: \url{https://openfoam.org/download/10-ubuntu/}.
+    \item For other \software{Linux} distributions: \url{https://openfoam.org/download/10-linux/}.
+    \item For \software{Windows}: \url{https://openfoam.org/download/windows/}. Additionally, the \href{https://www.youtube.com/watch?v=w0bBOWlVlvA&list=PLcOe4WUSsMkEH4w-y5rSRtQ40ExbYmVWf&index=25}{video tutorial by J\'{o}zsef Nagy} may also be helpful.
+\end{itemize}
+
+\section{The first simulation}
+\label{sec:first_simulation}
+
+\end{document}
