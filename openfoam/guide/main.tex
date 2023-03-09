@@ -1,35 +1,91 @@
 \documentclass[10pt,a5paper]{article}
 
+\PassOptionsToPackage{dvipsnames}{xcolor}
 \usepackage[cochineal]{newtx} % font packages first
+\usepackage{accsupp}
 \usepackage{csquotes}
+\usepackage{etoolbox}
 \usepackage[margin=0.5in,right=1in,marginparwidth=1in]{geometry}
 \usepackage{marginnote}
 \usepackage{setspace}
+\usepackage{pgffor}
+\usepackage[listings,skins]{tcolorbox}
 \usepackage{xcolor}
 \usepackage[%
-    colorlinks
+    colorlinks,
+    linkcolor=blue,
+    urlcolor=green!60!black,
 ]{hyperref}
 
 
 
-\colorlet{keywordcolor}{red}
-\newcommand{\code}[1]{\texttt{#1}}
+\colorlet{keywordcolor}{Plum}
+\DeclareTotalTColorBox{\terminal}{mO{default}}{%
+    skin=bicolor,
+    verbatim,
+    colback=black!80,
+    colupper=white,
+    colframe=black,
+    colbacklower=gray!10,
+    boxsep=0.5em,
+    middle=0em,
+}{%
+    \textcolor{VioletRed}{>}
+    \lstinline[style=BashDark]|#1|
+    \ifstrequal{#2}{default}{}{%
+        \tcblower
+        \small
+        #2
+    }
+}
+\DeclareTotalTCBox{\code}{m}{%
+    verbatim,
+    colback=black!20,
+    colframe=black,
+    boxsep=0.25em,
+    boxrule=0em,
+    arc=0em,
+    left=0pt,
+    right=0pt,
+}{%
+    \small\lstinline[style=BashLight]|#1|
+}
+\lstdefinestyle{BashDark}{%
+    language=bash,
+    keywordstyle=\color{cyan},
+    stringstyle=\color{yellow},
+    breaklines,
+    prebreak={\textbackslash},
+    %postbreak=\mbox{\BeginAccSupp{ActualText={}}\textcolor{BrickRed}{$\hookrightarrow$}\space\EndAccSupp{}},
+}
+\lstdefinestyle{BashLight}{%
+    language=bash,
+    %keywordstyle=\color{blue},
+    %stringstyle=\color{red},
+    %breaklines,
+    %prebreak={\textbackslash},
+    %postbreak=\mbox{\BeginAccSupp{ActualText={}}\textcolor{BrickRed}{$\hookrightarrow$}\space\EndAccSupp{}},
+}
 \newcommand{\keyword}[1]{%
     \textcolor{keywordcolor}{\bfseries #1}
     \marginnote{\parbox[1]{\marginparwidth}{\raggedright\footnotesize\bfseries\textcolor{keywordcolor}{#1}}}
 }
+\newcommand{\linux}{\software{Linux}}
 \newcommand{\openfoam}{\software{OpenFOAM}}
 \newcommand{\paraview}{\software{ParaView}}
 \newcommand{\software}[1]{\textsf{#1}}
+\newcommand{\windows}{\software{Windows}}
 \setlength{\parskip}{0.5em}
+\setlength{\parindent}{0em}
 
 
 
 \begin{document}
 
 \setstretch{1.1}
+\sloppy
 
-\title{A quick guide to getting started with \openfoam}
+\title{A quick guide for getting started with \openfoam}
 \author{Vachan Potluri}
 \maketitle
 
@@ -43,7 +99,7 @@
 \label{sec:intro_subsec:software}
 More specifically, it is a free and \keyword{open source} software. That means the underlying files that are used to develop the software are given to users. These \enquote{underlying files} are called the \keyword{source code}. Advanced users often modify this source code for their custom applications.
 
-\par \openfoam{} doesn't have a graphical user interface (GUI). The user communicates with \openfoam{} through files and commands. This makes it less suitable for \software{Windows} users who are more familiar with GUI. However, \openfoam{} commands are very simple to use, and you can very quickly get familiar with them.
+\par \openfoam{} doesn't have a graphical user interface (GUI). The user communicates with \openfoam{} through files and commands. This makes it less suitable for \windows{} users who are more familiar with GUI. However, \openfoam{} commands are very simple to use, and you can very quickly get familiar with them.
 
 \par Since \openfoam{} does not have a GUI, it does not have a visualisation interface of its own, but is uses a software named \paraview{} for this purpose. \openfoam{} installs \paraview{} by itself without requiring any additional installation steps.
 
@@ -55,14 +111,29 @@ More specifically, it is a free and \keyword{open source} software. That means t
 
 \section{Installation}
 \label{sec:installation}
-These links contain instructions for installation of \openfoam{} in detail.
+These links contain instructions for installation of \openfoam{} (version 10) in detail.
 \begin{itemize}
-    \item For \software{Ubuntu}: \url{https://openfoam.org/download/10-ubuntu/}.
-    \item For other \software{Linux} distributions: \url{https://openfoam.org/download/10-linux/}.
-    \item For \software{Windows}: \url{https://openfoam.org/download/windows/}. Additionally, the \href{https://www.youtube.com/watch?v=w0bBOWlVlvA&list=PLcOe4WUSsMkEH4w-y5rSRtQ40ExbYmVWf&index=25}{video tutorial by J\'{o}zsef Nagy} may also be helpful.
+    \item \href{https://openfoam.org/download/10-ubuntu/}{Link for \software{Ubuntu}}.
+    \item \href{https://openfoam.org/download/10-linux/}{Link for other \linux{} distributions}.
+    \item \href{https://openfoam.org/download/windows/}{Link for \windows}. For \windows{}, \openfoam{} runs within an application called \enquote{Windows Subsystem for Linux} (WSL). WSL is a virtual environment that allows running \linux{} softwares on \windows{}. These video tutorials by J\'{o}zsef Nagy are very helpful for installation and getting familiar with WSL: \href{https://www.youtube.com/watch?v=w0bBOWlVlvA}{for \windows{} 10}, \href{https://www.youtube.com/watch?v=CeEJS1eT9NE}{for \windows{} 11}.
 \end{itemize}
 
 \section{The first simulation}
 \label{sec:first_simulation}
+First, create a new directory (folder) for performing simulations. We will call this the \enquote{run} directory.\\
+\terminal{mkdir -p $FOAM_RUN}[\code{$FOAM_RUN} is an \enquote{environment variable} that is assigned by \openfoam{} during installation. The command \code{mkdir} (\enquote{make directory}) creates this directory.]
 
+Now, copy a heat conduction tutorial case into this run directory.\\
+\terminal{cp -r $FOAM_TUTORIALS/basic/laplacianFoam/flange $FOAM_RUN/}[\code{cp} (stands for \enquote{copy}) copies files from a source to a destination. \code{$FOAM_TUTORIALS} is a directory where many tutorial cases provided by \openfoam{} reside.]
+
+Now navigate to this newly copied folder.\\
+\terminal{cd $FOAM_RUN/flange}[\code{cd} (stands for \enquote{change directory}). This command sets the folder copied above as the working directory.]\\
+You can notice that this folder contains an \software{ANSYS} mesh file with the name \code{flange.ans}. We will use this mesh for simulation. First, convert it into \openfoam's format.\\
+\terminal{ansysToFoam flange.ans}[\code{ansysToFoam} is an \openfoam{} application for reading \software{ANSYS} meshes.]
+
+\code{laplacianFoam} is the solver name for heat conduction simulation. Execute the solver to perform the simulation.\\
+\terminal{laplacianFoam}
+
+Now, to visualise the results.\\
+\terminal{paraFoam}[This launches the \paraview{} software and also opens the results in the current directory.]
 \end{document}
