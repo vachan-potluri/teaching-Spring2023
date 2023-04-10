@@ -3,10 +3,11 @@
 
 
 
-\usepackage{forest}
+\usepackage[edges]{forest}
 \usepackage{siunitx}
 \usepackage{tikz}
 \usetikzlibrary{arrows, arrows.meta, positioning, trees}
+\usepackage{xparse}
 
 
 
@@ -14,7 +15,11 @@
 \def\openfoam{\texttt{OpenFOAM}}
 \def\paraview{\texttt{ParaView}}
 \def\parafoam{\texttt{paraFoam}}
-\newcommand{\pder}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}}
+\NewDocumentCommand{\pder}{omm}{%
+    \IfNoValueTF{#1}{\ensuremath{\frac{\partial #2}{\partial #3}}}{\ensuremath{\frac{\partial^#1 #2}{\partial #3^#1}}}
+}
+%\newcommand{\pder}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}}
+\newcommand{\setitemsep}[1]{\setlength\itemsep{#1}}
 
 
 
@@ -54,35 +59,180 @@
 \end{frame}
 
 \begin{frame}{Case 1}{Heat conduction in a square plate}
-    \begin{equation*}
-        \pder{T}{t} = \nabla \cdot (D_T \nabla T)
-    \end{equation*}
-    \begin{figure}
-        \begin{tikzpicture}[scale=2]
-            \draw [fill=cyan!10] (0,0) -- node [below] {Insulated} (1,0) -- node [rotate=90, below] {\qty{100}{\degreeCelsius}} (1,1) -- node [above] {\qty{300}{\degreeCelsius}} (0,1) -- node [rotate=90, above] {Insulated} cycle;
-        \end{tikzpicture}
-    \end{figure}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{equation*}
+                \pder{T}{t} = D_T \left( \pder[2]{T}{x} + \pder[2]{T}{y} \right)
+            \end{equation*}
+            \begin{figure}
+                \begin{tikzpicture}[scale=2]
+                    \draw [fill=cyan!10] (0,0) -- node [below] {Insulated} (1,0) -- node [rotate=90, below] {\qty{100}{\degreeCelsius}} (1,1) -- node [above] {\qty{300}{\degreeCelsius}} (0,1) -- node [rotate=90, above] {Insulated} cycle;
+                \end{tikzpicture}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            Other settings
+            \begin{itemize}
+                \item $D_T=\qty{1}{m^2/s}$
+                \item $L=\qty{1}{m}$
+                \item End time \qty{5}{s}
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \onslide<2->
     \begin{itemize}
         \item \lapfoam{} is the ``solver'' to be used for heat conduction equation
         \item Visualise using \parafoam
+        \begin{itemize}
+            \item Mesh representation
+            \item Data array selection
+            \item Navigating times
+        \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{\openfoam's case setup}
-    For doing \lapfoam{} simulation, create a folder with this structure
-    \begin{block}{Case structure for \lapfoam}
-        \begin{figure}
-            \centering
-            \begin{forest}
-                [folder name
-                    [0]
-                    [constant]
-                    [system]
-                ]
-            \end{forest}
-        \end{figure}
-    \end{block}
+\begin{frame}{\openfoam's simulation setup}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{block}{Case structure for \lapfoam}
+                \begin{figure}
+                    \centering
+                    \begin{forest}
+                        for tree={
+                            font=\ttfamily,
+                            grow'=0,
+                            child anchor=west,
+                            parent anchor=south,
+                            anchor=west,
+                            calign=first,
+                            edge path={
+                                \noexpand\path [draw, \forestoption{edge}]
+                                (!u.south west) +(7.5pt,0) |- node[circle,fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+                            },
+                            before typesetting nodes={
+                                if n=1
+                                {insert before={[,phantom]}}
+                                {}
+                            },
+                            fit=band,
+                            before computing xy={l=15pt},
+                        }
+                        [case\_name/
+                            [0/
+                                [T]
+                            ]
+                            [constant/
+                                [physicalProperties]
+                                [polyMesh/*]
+                            ]
+                            [system/
+                                [controlDict]
+                                [fvSchemes]
+                                [fvSolution]
+                            ]
+                        ]
+                    \end{forest}
+                \end{figure}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+\onslide<2->
+            \begin{itemize}
+                \setitemsep{1em}
+                \item Every simulation is setup using certain ``setting'' files
+                \item These files are grouped into 3 folders: \texttt{0/}, \texttt{constant/} and \texttt{system/}
+                \item All are text files
+\onslide<3->
+                \item Only mandatory files are shown here, there can be additional files also
+                \item When a simulation is done, \openfoam{} generates additional time files
+                \item We will learn about these files by doing some variations of the square plate simulation
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Case 1, variation 1}{Change the thermal diffusivity}
+    \begin{itemize}
+        \setitemsep{1em}
+        \item In \texttt{constant/physicalProperties}, you can change $D_T$
+        \item Things to note
+        \begin{itemize}
+            \item \texttt{FoamFile} ``header''
+            \item Units of $D_T$
+        \end{itemize}
+        \item Try
+        \begin{itemize}
+            \item Reduce $D_T$ to \qty{0.01}{m^2/s} and see the solution evolution
+        \end{itemize}
+        \item Tips
+        \begin{itemize}
+            \item \texttt{foamListTimes -rm} deletes all time folders other than \texttt{0/}
+            \item Reload files in \paraview{} by right-clicking
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Case 1, variation 2}{Change the boundary conditions}
+    \begin{itemize}
+        \setitemsep{1em}
+        \item In \texttt{0/T} you can set initial condition (IC) and boundary conditions (BCs)
+        \item Things to note
+        \begin{itemize}
+            \item \texttt{internalField} $\implies$ IC
+            \item Names of different boundaries
+            \item \texttt{type} of different boundaries $\implies$ type of BC
+        \end{itemize}
+        \item Special BC type \texttt{empty}
+        \begin{itemize}
+            \item By default \openfoam{} does 3d simulations
+            \begin{itemize}
+                \item Check this in \paraview
+            \end{itemize}
+            \item \texttt{empty} BC in a direction tells \openfoam{} to not consider that direction
+        \end{itemize}
+        \item Try
+        \begin{itemize}
+            \item Change bottom BC to \qty{-100}{\degreeCelsius}
+            \item Change IC
+            \item Do a 1d simulation by setting top and bottom boundaries as \texttt{empty}
+            \begin{itemize}
+                \item Verify the solution using ``Plot Over Line'' in \paraview{} or \texttt{gradTx} value
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Case 1, variation 3}{Change time settings}
+    \begin{itemize}
+        \setitemsep{1em}
+        \item \texttt{system/controlDict} contains all the main controls of the simulation
+        \item Things to note
+        \begin{itemize}
+            \item \texttt{startFrom}, \texttt{stopAt}
+            \item \texttt{startTime}, \texttt{endTime}
+            \item \texttt{deltaT}
+            \item \texttt{writeControl}, \texttt{writeInterval}
+        \end{itemize}
+        \item For heat conduction equation
+        \begin{itemize}
+            \item ``Stable'' time step value ($\Delta t_s$) satisfies $D_T \dfrac{\Delta t_s}{\Delta x^2} < 1$
+            \item To determine end time ($t_e$), compare it with diffusion time scale
+            \begin{equation*}
+                t_e \gg \frac{L^2}{D_T} \implies \text{Steady state reached}
+            \end{equation*}
+        \end{itemize}
+        \item Try
+        \begin{itemize}
+            \item Increase $D_T$ to \qty{10}{m^2/s}
+            \item For correct simulation, time step and end time also have to be changed
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Case 1, variation 4}{Change the mesh}
+    \begin{itemize}
+        \item Yo
+    \end{itemize}
 \end{frame}
 
 \end{document}
