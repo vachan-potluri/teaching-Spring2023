@@ -7,7 +7,6 @@
 \usepackage{siunitx}
 \usepackage{tikz}
 \usetikzlibrary{3d, perspective}
-\usepackage{tikz-3dplot}
 \usepackage{xparse}
 
 
@@ -294,7 +293,7 @@
         \begin{column}{0.5\linewidth}
             \begin{figure}
                 \centering
-                \begin{tikzpicture}[x={(0.5cm,0.35cm)}, y={(-0.65cm,0.2cm)}, z={(0cm,0.75cm)}, >=stealth, inner sep=1pt, font=\scriptsize]
+                \begin{tikzpicture}[3d view={-60}{35.26}, >=stealth, inner sep=0.25pt, font=\scriptsize, scale=0.75]
                     \begin{scope}[shift={(-1.5,0,0)}, blue, scale=0.5]
                         \draw [->] (0,0,0) -- (1,0,0) node [pos=1.2] {$x$};
                         \draw [->] (0,0,0) -- (0,1,0) node [pos=1.2] {$y$};
@@ -302,7 +301,7 @@
                     \end{scope}
                     
                     \begin{scope}[canvas is xy plane at z=0]
-                        \draw (0,0) node [below] {0} -- node [anchor=north west] {\qty{4}{m}} (4,0) node [below] {1} -- node [anchor=south west] {\qty{1}{m}} (4,1) node [anchor=south east] {2} -- (1,1) node [anchor=north west] {3} -- cycle;
+                        \draw (0,0) node [below] {0} -- node [anchor=north west] {\qty{4}{m}} (4,0) node [below] {1} -- node [above=1pt] {\qty{1}{m}} (4,1) node [anchor=south east] {2} -- (1,1) node [anchor=south east] {3} -- cycle;
                         \draw (1,1) -- (1,4) node [anchor=south west] {4} -- (0,4) node [left] {5} -- (0,0);
                     \end{scope}
                     
