@@ -17,19 +17,19 @@ convertToMeters 1;
 
 vertices
 (
-    (-1 -1 -1)
-    (1 -1 -1)
-    (1 1 -1)
-    (-1 1 -1)
-    (-1 -1 1)
-    (1 -1 1)
-    (1 1 1)
-    (-1 1 1)
+    name p0 (-1 -1 -1)
+    name p1 (1 -1 -1)
+    name p2 (1 1 -1)
+    name p3 (-1 1 -1)
+    name p4 (-1 -1 1)
+    name p5 (1 -1 1)
+    name p6 (1 1 1)
+    name p7 (-1 1 1)
 );
 
 blocks
 (
-    hex (0 1 2 3 4 5 6 7) (10 10 1) simpleGrading (1 1 1)
+    hex (p0 p1 p2 p3 p4 p5 p6 p7) (10 10 1) simpleGrading (1 1 1)
 );
 
 boundary
@@ -39,7 +39,7 @@ boundary
         type patch;
         faces
         (
-            (0 4 7 3)
+            (p0 p4 p7 p3)
         );
     }
     right
@@ -47,7 +47,7 @@ boundary
         type patch;
         faces
         (
-            (1 2 6 5)
+            (p1 p2 p6 p5)
         );
     }
     bottom
@@ -55,7 +55,7 @@ boundary
         type patch;
         faces
         (
-            (0 1 5 4)
+            (p0 p1 p5 p4)
         );
     }
     top
@@ -63,7 +63,7 @@ boundary
         type patch;
         faces
         (
-            (3 7 6 2)
+            (p3 p7 p6 p2)
         );
     }
     front_and_back
@@ -71,8 +71,8 @@ boundary
         type empty;
         faces
         (
-            (5 6 7 4)
-            (0 3 2 1)
+            (p5 p6 p7 p4)
+            (p0 p3 p2 p1)
         );
     }
 );
