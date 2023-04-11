@@ -4,6 +4,7 @@
 
 
 \usepackage[edges]{forest}
+\usepackage{listofitems}
 \usepackage{siunitx}
 \usepackage{tikz}
 \usetikzlibrary{3d, perspective}
@@ -16,11 +17,15 @@
 \def\openfoam{\texttt{OpenFOAM}}
 \def\paraview{\texttt{ParaView}}
 \def\parafoam{\texttt{paraFoam}}
+\newcommand{\setitemsep}[1]{\setlength\itemsep{#1}}
+\newcommand{\OpenfoamUnitSet}[1]{%
+    \readlist*{\units}{#1}
+    [\units[1]~\units[2]~\units[3]~\units[4]~\units[5]~\units[6]~\units[7]]
+}
 \NewDocumentCommand{\pder}{omm}{%
     \IfNoValueTF{#1}{\ensuremath{\frac{\partial #2}{\partial #3}}}{\ensuremath{\frac{\partial^#1 #2}{\partial #3^#1}}}
 }
 %\newcommand{\pder}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}}
-\newcommand{\setitemsep}[1]{\setlength\itemsep{#1}}
 
 
 
@@ -57,6 +62,8 @@
             \item User customisable: solve any equation you desire
         \end{itemize}
     \end{block}
+\onslide<4->
+    Let's jump right into doing some simulations
 \end{frame}
 
 \begin{frame}{Case 1}{Heat conduction in a square plate}
@@ -75,19 +82,20 @@
             Other settings
             \begin{itemize}
                 \item $D_T=\qty{1}{m^2/s}$
-                \item $L=\qty{1}{m}$
-                \item End time \qty{5}{s}
+                \item $L=\qty{2}{m}$
+                \item End time \qty{10}{s}
             \end{itemize}
         \end{column}
     \end{columns}
 \onslide<2->
     \begin{itemize}
         \item \lapfoam{} is the ``solver'' to be used for heat conduction equation
-        \item Visualise using \parafoam
+        \item Visualise using \texttt{parafoam -builtin}
         \begin{itemize}
             \item Mesh representation
             \item Data array selection
             \item Navigating times
+            \item Changing color map
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -159,10 +167,17 @@
         \begin{itemize}
             \item \texttt{FoamFile} ``header''
             \item Units of $D_T$
+            \item Units in \openfoam{} are specified using powers of 7 fundamental units: [\unit{kg} \unit{m} \unit{s} \unit{K} \unit{mol} \unit{A} \unit{cd}]
+            \begin{itemize}
+                \item \OpenfoamUnitSet{1,1,-2,0,0,0,0} is \unit{kg.m/s^2} $\implies$ unit of force
+                \item \OpenfoamUnitSet{0,0,1,0,0,1,0} is \unit{A.s} $\implies$ unit of charge
+                \item \OpenfoamUnitSet{1,2,2,-1,-1,0,0} is \unit{J/mol.K} $\implies$ unit of universal gas constant
+            \end{itemize}
         \end{itemize}
         \item Try
         \begin{itemize}
             \item Reduce $D_T$ to \qty{0.01}{m^2/s} and see the solution evolution
+            \item Can you guess whether the solution will evolve faster or slower?
         \end{itemize}
         \item Tips
         \begin{itemize}
@@ -216,7 +231,7 @@
         \item For heat conduction equation
         \begin{itemize}
             \item ``Stable'' time step value ($\Delta t_s$) satisfies $D_T \dfrac{\Delta t_s}{\Delta x^2} < 1$
-            \item To determine end time ($t_e$), compare it with diffusion time scale
+            \item To determine end time ($t_e$) for steady state:
             \begin{equation*}
                 t_e \gg \frac{L^2}{D_T} \implies \text{Steady state reached}
             \end{equation*}
@@ -224,7 +239,7 @@
         \item Try
         \begin{itemize}
             \item Increase $D_T$ to \qty{10}{m^2/s}
-            \item For correct simulation, time step and end time also have to be changed
+            \item For correct simulation, time step also has to be changed
         \end{itemize}
     \end{itemize}
 \end{frame}
@@ -252,7 +267,7 @@
     \begin{itemize}
         \setitemsep{1em}
         \item \openfoam{} defines a local coordinate system (LCS) for every block
-        \item Blocks are created using a list of points ordered in a specific way
+        \item Blocks are created using a list of points $(p_0~p_1~p_2~p_3~p_4~p_5~p_6~p_7~p_8)$ ordered in a specific way
         \begin{enumerate}
             \item Point 0 is the origin of (LCS)
             \item Line 0-1 is along $x_1$ direction
@@ -263,7 +278,8 @@
     \end{itemize}
     \begin{figure}
         \centering
-        One of these is wrong.\\[0.5em]
+        Suppose a block is defined using (0 1 2 3 4 5 6 7).\\
+        Which one of these is wrong?\\[0.5em]
         \includegraphics[width=0.8\linewidth]{blockmesh_ordering}
     \end{figure}
 \end{frame}
