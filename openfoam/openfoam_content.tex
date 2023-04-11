@@ -63,7 +63,7 @@
         \end{itemize}
     \end{block}
 \onslide<4->
-    Let's jump right into doing some simulations
+    Let's jump right away into doing some simulations
 \end{frame}
 
 \begin{frame}{Case 1}{Heat conduction in a square plate}
@@ -90,7 +90,8 @@
 \onslide<2->
     \begin{itemize}
         \item \lapfoam{} is the ``solver'' to be used for heat conduction equation
-        \item Visualise using \texttt{parafoam -builtin}
+\onslide<3->
+        \item Visualise using \texttt{paraFoam -builtin}
         \begin{itemize}
             \item Mesh representation
             \item Data array selection
@@ -149,7 +150,7 @@
                 \setitemsep{1em}
                 \item Every simulation is setup using certain ``setting'' files
                 \item These files are grouped into 3 folders: \texttt{0/}, \texttt{constant/} and \texttt{system/}
-                \item All are text files
+                \item All the setting files are text files
 \onslide<2->
                 \item Only mandatory files are shown here, there can be additional files also
                 \item When a simulation is done, \openfoam{} generates corresponding time files
@@ -163,17 +164,19 @@
     \begin{itemize}
         \setitemsep{1em}
         \item In \texttt{constant/physicalProperties}, you can change $D_T$
+\onslide<2->
         \item Things to note
         \begin{itemize}
             \item \texttt{FoamFile} ``header''
             \item Units of $D_T$
             \item Units in \openfoam{} are specified using powers of 7 fundamental units: [\unit{kg} \unit{m} \unit{s} \unit{K} \unit{mol} \unit{A} \unit{cd}]
             \begin{itemize}
-                \item \OpenfoamUnitSet{1,1,-2,0,0,0,0} is \unit{kg.m/s^2} $\implies$ unit of force
-                \item \OpenfoamUnitSet{0,0,1,0,0,1,0} is \unit{A.s} $\implies$ unit of charge
-                \item \OpenfoamUnitSet{1,2,2,-1,-1,0,0} is \unit{J/mol.K} $\implies$ unit of universal gas constant
+                \item \OpenfoamUnitSet{1,1,-2,0,0,0,0} is \unit{kg.m/s^2} $\implies$ force
+                \item \OpenfoamUnitSet{0,0,1,0,0,1,0} is \unit{A.s} $\implies$ charge
+                \item \OpenfoamUnitSet{1,2,2,-1,-1,0,0} is \unit{J/mol.K} $\implies$ universal gas constant
             \end{itemize}
         \end{itemize}
+\onslide<3->
         \item Try
         \begin{itemize}
             \item Reduce $D_T$ to \qty{0.01}{m^2/s} and see the solution evolution
@@ -197,6 +200,7 @@
             \item Names of different boundaries
             \item \texttt{type} of different boundaries $\implies$ type of BC
         \end{itemize}
+\onslide<2->
         \item Special BC type \texttt{empty}
         \begin{itemize}
             \item By default \openfoam{} does 3d simulations
@@ -205,6 +209,7 @@
             \end{itemize}
             \item \texttt{empty} BC in a direction tells \openfoam{} to not consider that direction
         \end{itemize}
+\onslide<3->
         \item Try
         \begin{itemize}
             \item Change bottom BC to \qty{-100}{\degreeCelsius}
@@ -228,6 +233,7 @@
             \item \texttt{deltaT}
             \item \texttt{writeControl}, \texttt{writeInterval}
         \end{itemize}
+\onslide<2->
         \item For heat conduction equation
         \begin{itemize}
             \item ``Stable'' time step value ($\Delta t_s$) satisfies $D_T \dfrac{\Delta t_s}{\Delta x^2} < 1$
@@ -236,6 +242,7 @@
                 t_e \gg \frac{L^2}{D_T} \implies \text{Steady state reached}
             \end{equation*}
         \end{itemize}
+\onslide<3->
         \item Try
         \begin{itemize}
             \item Increase $D_T$ to \qty{10}{m^2/s}
@@ -252,9 +259,9 @@
             \item Create in a different software (e.g. ANSYS) and import to \openfoam
             \item Use \openfoam's tools to create mesh
         \end{itemize}
-        \item \blockmesh{} is one such tool in \openfoam{} to create meshes
-        \item \blockmesh{} reads an additional file \texttt{system/blockMeshDict} to create mesh
-        \item \texttt{system/blockMeshDict} has 3 components
+        \item<2-> \blockmesh{} is one such tool in \openfoam{} to create meshes
+        \item<3-> \blockmesh{} reads an additional file \texttt{system/blockMeshDict} to create mesh
+        \item<4-> \texttt{system/blockMeshDict} has 3 components
         \begin{enumerate}
             \item Specify points or vertices
             \item Create ``blocks'' using these vertices
@@ -267,19 +274,19 @@
     \begin{itemize}
         \setitemsep{1em}
         \item \openfoam{} defines a local coordinate system (LCS) for every block
-        \item Blocks are created using a list of points $(p_0~p_1~p_2~p_3~p_4~p_5~p_6~p_7~p_8)$ ordered in a specific way
+        \item Blocks are created using a list of points $(p_0~p_1~p_2~p_3~p_4~p_5~p_6~p_7)$ ordered in a specific way
         \begin{enumerate}
-            \item Point 0 is the origin of (LCS)
-            \item Line 0-1 is along $x_1$ direction
-            \item Line 1-2 is along $x_2$ direction
-            \item Points 0-3 define plane $x_3=0$
-            \item Points 4-7 are obtained by translating points 0-3 in $x_3$ direction
+            \item Point $p_0$ is the origin of LCS
+            \item Line $p_0$-$p_1$ is along $x_1$ direction
+            \item Line $p_1$-$p_2$ is along $x_2$ direction
+            \item Points $p_0$-$p_3$ define plane $x_3=0$
+            \item Points $p_4$-$p_7$ are obtained by translating points $p_0$-$p_3$ in $x_3$ direction
         \end{enumerate}
     \end{itemize}
     \begin{figure}
         \centering
-        Suppose a block is defined using (0 1 2 3 4 5 6 7).\\
-        Which one of these is wrong?\\[0.5em]
+        Suppose a block is defined using $(p_0~p_1~p_2~p_3~p_4~p_5~p_6~p_7)$.\\
+        Which one of these is correct?\\[0.5em]
         \includegraphics[width=0.8\linewidth]{blockmesh_ordering}
     \end{figure}
 \end{frame}
@@ -289,6 +296,7 @@
         \setitemsep{1em}
         \item Boundaries are defined using a list of points such that right hand thumb rule points outward the block
         \item The boundary names in \texttt{system/blockMeshDict} and \texttt{0/T} must match
+\onslide<2->
         \item Try
         \begin{itemize}
             \item Increasing mesh resolution
@@ -332,24 +340,26 @@
                 \end{tikzpicture}
             \end{figure}
             \begin{itemize}
+\onslide<2->
                 \item This geometry can be constructed using two blocks
                 \begin{enumerate}
-                    \item Block 1: (0 1 2 3 6 7 8 9)
-                    \item Block 2: (0 3 4 5 6 9 10 11)
+                    \item Block 1: $(p_0 ~ p_1 ~ p_2 ~ p_3 ~ p_6 ~ p_7 ~ p_8 ~ p_9)$
+                    \item Block 2: $(p_0 ~ p_3 ~ p_4 ~ p_5 ~ p_6 ~ p_9 ~ p_{10} ~ p_{11})$
                 \end{enumerate}
-                \item Use single cell in $z$ direction and perpendicular to clamp
             \end{itemize}
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{itemize}
-                \item Tip: you can see the mesh in \paraview{} without running the simulation
+\onslide<3->
                 \item BCs
                 \begin{itemize}
-                    \item One end (4 5 11 10) of clamp at \qty{100}{\degreeCelsius}
-                    \item Other end (1 7 8 2) at \qty{0}{\degreeCelsius}
+                    \item One end $(p_4 ~ p_5 ~ p_{11} ~ p_{10})$ of clamp at \qty{100}{\degreeCelsius}
+                    \item Other end $(p_1 ~ p_2 ~ p_8 ~ p_7)$ at \qty{0}{\degreeCelsius}
                     \item All other boundaries insulated
                     \item \texttt{empty} BC for top and bottom planes
                 \end{itemize}
+	            \item Tip: you can see the mesh in \paraview{} without running the simulation
+\onslide<4->
                 \item Use $D_T=\qty{1}{m^2/s}$; set end time and time step accordingly
                 \begin{gather*}
                     D_T \frac{\Delta t_s}{\Delta x} \le 1\\
