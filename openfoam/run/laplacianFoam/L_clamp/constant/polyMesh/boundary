@@ -19,27 +19,27 @@ FoamFile
     end1
     {
         type            patch;
-        nFaces          1;
-        startFace       19;
+        nFaces          5;
+        startFace       445;
     }
     end2
     {
         type            patch;
-        nFaces          1;
-        startFace       20;
+        nFaces          5;
+        startFace       450;
     }
     insulated
     {
         type            patch;
-        nFaces          40;
-        startFace       21;
+        nFaces          100;
+        startFace       455;
     }
     top_and_bottom
     {
         type            empty;
         inGroups        List<word> 1(empty);
-        nFaces          40;
-        startFace       61;
+        nFaces          500;
+        startFace       555;
     }
 )
 
