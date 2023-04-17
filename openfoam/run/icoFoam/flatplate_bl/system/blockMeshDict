@@ -33,8 +33,8 @@ vertices
 
 blocks
 (
-    hex (p1 p2 p5 p4 p7 p8 p11 p10) (25 40 1) simpleGrading (1 1 1)
-    hex (p0 p1 p4 p3 p6 p7 p10 p9) (60 40 1) simpleGrading (1 1 1)
+    hex (p1 p2 p5 p4 p7 p8 p11 p10) (25 40 1) simpleGrading (28 20 1)
+    hex (p0 p1 p4 p3 p6 p7 p10 p9) (60 40 1) simpleGrading (0.055 20 1)
 );
 
 boundary

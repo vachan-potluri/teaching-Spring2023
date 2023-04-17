@@ -19,17 +19,33 @@ internalField   uniform 0;
 
 boundaryField
 {
-    movingWall
+    wall
     {
         type            zeroGradient;
     }
 
-    fixedWalls
+    right
+    {
+        type            fixedValue;
+        value           uniform 6.371e4;
+    }
+
+    left
     {
         type            zeroGradient;
     }
-
-    frontAndBack
+    
+    top
+    {
+        type            zeroGradient;
+    }
+    
+    symmetry
+    {
+        type            zeroGradient;
+    }
+    
+    front_and_back
     {
         type            empty;
     }
