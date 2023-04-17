@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+vertices
+(
+    name p0 (-4 0 0)
+    name p1 (0 0 0)
+    name p2 (2 0 0)
+    name p3 (-4 2.5 0)
+    name p4 (0 2.5 0)
+    name p5 (2 2.5 0)
+    name p6 (-4 0 0.1)
+    name p7 (0 0 0.1)
+    name p8 (2 0 0.1)
+    name p9 (-4 2.5 0.1)
+    name p10 (0 2.5 0.1)
+    name p11 (2 2.5 0.1)
+);
+
+blocks
+(
+    hex (p1 p2 p5 p4 p7 p8 p11 p10) (25 40 1) simpleGrading (1 1 1)
+    hex (p0 p1 p4 p3 p6 p7 p10 p9) (60 40 1) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    wall
+    {
+        type wall;
+        faces
+        (
+            (p1 p2 p8 p7)
+        );
+    }
+    right
+    {
+        type patch;
+        faces
+        (
+            (p8 p2 p5 p11)
+        );
+    }
+    top
+    {
+        type patch;
+        faces
+        (
+            (p5 p4 p10 p11)
+            (p4 p3 p9 p10)
+        );
+    }
+    left
+    {
+        type patch;
+        faces
+        (
+            (p3 p0 p6 p9)
+        );
+    }
+    symmetry
+    {
+        type patch;
+        faces
+        (
+            (p0 p1 p7 p6)
+        );
+    }
+    front_and_back
+    {
+        type empty;
+        faces
+        (
+            (p0 p3 p4 p1)
+            (p1 p4 p5 p2)
+            (p6 p7 p10 p9)
+            (p7 p8 p11 p10)
+        );
+    }
+);
+
+
+// ************************************************************************* //

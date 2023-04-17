@@ -13,6 +13,7 @@
 
 
 \def\blockmesh{\texttt{blockMesh}}
+\def\icofoam{\texttt{icoFoam}}
 \def\lapfoam{\texttt{laplacianFoam}}
 \def\openfoam{\texttt{OpenFOAM}}
 \def\paraview{\texttt{ParaView}}
@@ -362,9 +363,88 @@
 \onslide<4->
                 \item Use $D_T=\qty{1}{m^2/s}$; set end time and time step accordingly
                 \begin{gather*}
-                    D_T \frac{\Delta t_s}{\Delta x} \le 1\\
+                    D_T \frac{\Delta t_s}{\Delta x^2} \le 1\\
                     t_e \gg \frac{L^2}{D_T}
                 \end{gather*}
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Case 3}{Lid driven cavity}
+    \vspace{-1em}
+    \begin{columns}[T]
+        \begin{column}{0.3\linewidth}
+            \begin{figure}
+                \centering
+                \begin{tikzpicture}[scale=2, >=stealth, font=\small]
+                    \draw (0,0) -- ++(0,-1) -- ++(1,0) -- ++(0,1);
+                    \draw [thick, red, ->] (-0.1,0) -- +(1.2,0) node [above] {$u_0$};
+                    \node [align=center] at (0.5,-0.5) {Stagnant\\fluid};
+                \end{tikzpicture}
+\onslide<3->
+                \begin{forest}
+                    for tree={
+                        font=\ttfamily\scriptsize,
+                        grow'=0,
+                        child anchor=west,
+                        parent anchor=south,
+                        anchor=west,
+                        calign=first,
+                        edge path={
+                            \noexpand\path [draw, \forestoption{edge}]
+                            (!u.south west) +(7.5pt,0) |- node[circle,fill,inner sep=0.75pt] {} (.child anchor)\forestoption{edge label};
+                        },
+                        before typesetting nodes={
+                            if n=1
+                            {insert before={[,phantom]}}
+                            {}
+                        },
+                        fit=band,
+                        before computing xy={l=15pt},
+                        s sep=2pt,
+                    },
+                    [case\_name/
+                        [0/
+                            [p, red]
+                            [U, red]
+                        ]
+                        [constant/
+                            [physicalProperties]
+                            [polyMesh/*]
+                        ]
+                        [system/
+                            [controlDict]
+                            [fvSchemes]
+                            [fvSolution]
+                        ]
+                    ]
+                \end{forest}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.7\linewidth}
+\onslide<1->
+            \begin{gather*}
+                \pder{u}{x} + \pder{v}{y} = 0\\
+                \pder{u}{t} + u \pder{u}{x} + v \pder{u}{y} = -\pder{(p/\rho)}{x} + \nu \left( \pder[2]{u}{x} + \pder[2]{u}{y} \right)\\
+                \pder{v}{t} + u \pder{v}{x} + v \pder{v}{y} = -\pder{(p/\rho)}{y} + \nu \left( \pder[2]{v}{x} + \pder[2]{v}{y} \right)
+            \end{gather*}
+            \begin{itemize}
+                \setitemsep{0.5em}
+\onslide<2-> 
+                \item \icofoam{} is one solver for ``transient laminar'' incompressible flow
+                \begin{itemize}
+\onslide<4->
+                    \item \texttt{p} in \icofoam{} is $p/\rho$
+                \end{itemize}
+\onslide<5->
+                \item We will setup this case from scratch using \openfoam's ``tutorial cases''
+                \item And learn some techniques in \paraview
+                \begin{itemize}
+                    \item Extracting 2d slice of a 3d domain
+                    \item Plot over line
+                    \item Visualising streamlines
+                \end{itemize}
             \end{itemize}
         \end{column}
     \end{columns}
