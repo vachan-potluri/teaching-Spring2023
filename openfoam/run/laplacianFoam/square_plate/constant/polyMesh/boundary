@@ -16,36 +16,40 @@ FoamFile
 
 5
 (
-    left
+    front_and_back
     {
         type            patch;
-        nFaces          10;
-        startFace       180;
-    }
-    right
-    {
-        type            patch;
-        nFaces          10;
-        startFace       190;
+        physicalType    patch;
+        nFaces          800;
+        startFace       760;
     }
     bottom
     {
         type            patch;
-        nFaces          10;
-        startFace       200;
+        physicalType    patch;
+        nFaces          20;
+        startFace       1560;
+    }
+    right
+    {
+        type            patch;
+        physicalType    patch;
+        nFaces          20;
+        startFace       1580;
     }
     top
     {
         type            patch;
-        nFaces          10;
-        startFace       210;
+        physicalType    patch;
+        nFaces          20;
+        startFace       1600;
     }
-    front_and_back
+    left
     {
-        type            empty;
-        inGroups        List<word> 1(empty);
-        nFaces          200;
-        startFace       220;
+        type            patch;
+        physicalType    patch;
+        nFaces          20;
+        startFace       1620;
     }
 )
 
